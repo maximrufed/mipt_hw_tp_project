@@ -21,7 +21,7 @@ void BasicGame::step(float timeStep)
         tanks_[i].step();
     }
 
-    world_.Step(timeStep, 2, 2);
+    world_.Step(timeStep, 8, 3);
 }
 
 void BasicGame::tank_move(int tankID, float direction)

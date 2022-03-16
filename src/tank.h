@@ -16,7 +16,9 @@ private:
     // rigidbody
     b2Body *body_;
     float sizeX_ = 50;
-    float sizeY_ = 75;
+    float sizeY_ = 70;
+    float sizeGunX_ = 16;
+    float sizeGunY_ = 50;
     float linearVelocity_ = 400;
     float angularVelocity_ = 4;
 
