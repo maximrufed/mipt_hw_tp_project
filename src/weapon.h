@@ -2,24 +2,20 @@
 #include <SFML/Graphics.hpp>
 #include "box2d/box2d.h"
 
+#include <vector>
+
 #include "bullet.h"
+#include "tank.h"
+
+class Tank;
+class Bullet;
 
 class Weapon
 {
 public:
-    // here is position and direction
-    virtual void fire() = 0;
+    virtual std::vector<Bullet *> fire(b2World &world, Tank &tank) = 0;
 
-    virtual void idDead() = 0;
-};
+    virtual bool isDead() = 0;
 
-class WeaponBasicBullet : public Weapon
-{
-public:
-    // rigidbody
-    int bulletNo;
-
-    void fire() override;
-
-    void idDead() override;
+    virtual void step(float timeStep) = 0;
 };

@@ -6,37 +6,46 @@
 #include "bullet.h"
 
 #include <iostream>
+#include <vector>
 #include <string>
+
+class Weapon;
+class Bullet;
 
 class Tank
 {
 private:
     int id_;
-    // int lives;
-    // rigidbody
     b2Body *body_;
-    float sizeX_ = 50;
-    float sizeY_ = 70;
-    float sizeGunX_ = 16;
-    float sizeGunY_ = 50;
+    float sizeX_ = 30;
+    float sizeY_ = 45;
+    float sizeGunX_ = 8;
+    float sizeGunY_ = 32;
     float linearVelocity_ = 400;
     float angularVelocity_ = 4;
 
     float currentMove_ = 0;     // 1 or -1
     float currentRotation_ = 0; // 1 or -1
     std::string color_ = "";
-    // float maxSpeed;
-    // Weapon weapon;
+
+    Weapon *weapon_;
+
+    void createTank(b2World &world, b2Vec2 position);
 
 public:
-    Tank(b2World &world);
-    Tank(b2World &world, int color);
-    void move(float direction);   // TODO direction
-    void rotate(float direction); // TODO direction
-    void fire();                  // TODO direction
+    Tank(b2World &world, b2Vec2 position, Weapon *weapon);
+    void move(float direction);
+    void rotate(float direction);
+    std::vector<Bullet *> fire(b2World &world);
     void hit();
-    void step();
+    void step(float timeStep);
     void setColor(std::string color);
 
-    void debug_draw(sf::RenderWindow &window); // TODO direction
+    void debug_draw(sf::RenderWindow &window);
+
+    void setWeapon(Weapon *weapon);
+
+    float getSizeGunX();
+    float getSizeGunY();
+    b2Body *getBody();
 };

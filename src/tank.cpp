@@ -2,11 +2,11 @@
 
 #include <iostream>
 
-Tank::Tank(b2World &world)
+void Tank::createTank(b2World &world, b2Vec2 position)
 {
     b2BodyDef bodyDef;
     bodyDef.type = b2_dynamicBody;
-    bodyDef.position.Set(100.0f, 100.0f);
+    bodyDef.position.Set(position.x, position.y);
     bodyDef.bullet = true;
     body_ = world.CreateBody(&bodyDef);
 
@@ -37,6 +37,12 @@ Tank::Tank(b2World &world)
     }
 }
 
+Tank::Tank(b2World &world, b2Vec2 position, Weapon *weapon)
+{
+    createTank(world, position);
+    weapon_ = weapon;
+}
+
 void Tank::move(float direction)
 {
     currentMove_ += direction;
@@ -47,17 +53,18 @@ void Tank::rotate(float direction)
     currentRotation_ -= direction;
 }
 
-void Tank::fire()
+std::vector<Bullet *> Tank::fire(b2World &world)
 {
+    return weapon_->fire(world, *this);
 }
 
 void Tank::hit()
 {
 }
 
-void Tank::step()
+void Tank::step(float timeStep)
 {
-    // std::cerr << color_ << " : " << body_->GetPosition().x << " " << body_->GetPosition().y << " " << body_->GetAngle() << std::endl;
+    weapon_->step(timeStep);
 
     // apply current Move and Rotation
     body_->SetAngularVelocity(angularVelocity_ * currentRotation_);
@@ -105,31 +112,24 @@ void Tank::debug_draw(sf::RenderWindow &window)
         rectangle.rotate(rotation * DEG);
         window.draw(rectangle);
     }
+}
 
-    // float RADIAN_IN_DEGREES = 57.3f;
+void Tank::setWeapon(Weapon *weapon)
+{
+    weapon_ = weapon;
+}
 
-    // sf::RectangleShape rectangle;
+float Tank::getSizeGunX()
+{
+    return sizeGunX_;
+}
 
-    // b2Vec2 position = body_->GetPosition();
-    // float rotation = body_->GetAngle();
+float Tank::getSizeGunY()
+{
+    return sizeGunY_;
+}
 
-    // rectangle.setPosition(sf::Vector2f(position.x - sizeX_ / (float)2, position.y - sizeY_ / (float)2));
-    // // rectangle.setRotation((2 - rotation) * RADIAN_IN_DEGREES);
-    // rectangle.setRotation(rotation * (float)(180.0 / M_PI));
-    // rectangle.setSize(sf::Vector2f(sizeX_, sizeY_));
-    // rectangle.setOrigin(sf::Vector2f(sizeX_ / 2, sizeY_ / 2));
-
-    // if (color_ == "0")
-    // {
-    //     // red
-    //     rectangle.setFillColor(sf::Color(224, 26, 79, 255));
-    // }
-    // else
-    // {
-    //     rectangle.setFillColor(sf::Color(66, 0, 57, 255));
-    // }
-
-    // // std::cerr << "tank draw" << std::endl;
-
-    // window.draw(rectangle);
+b2Body *Tank::getBody()
+{
+    return body_;
 }

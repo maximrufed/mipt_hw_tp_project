@@ -11,8 +11,8 @@ int main_loop()
 {
     sf::RenderWindow window(sf::VideoMode(800, 1020), "My window");
 
-    BasicGame game = BasicGame(2);
-    game.start();
+    BasicGame game = BasicGame();
+    game.start(2);
 
     float want_fps = 60;
     sf::Clock loop_timer;
@@ -22,9 +22,37 @@ int main_loop()
         sf::Event event;
         while (window.pollEvent(event))
         {
-            if (event.type == sf::Event::Closed)
+            switch (event.type)
+            {
+            // window closed
+            case sf::Event::Closed:
                 window.close();
+                break;
+
+            // key pressed
+            case sf::Event::KeyPressed:
+                if (event.key.code == sf::Keyboard::Space)
+                {
+                    game.tank_fire(0);
+                }
+                else if (event.key.code == sf::Keyboard::Q)
+                {
+                    game.tank_fire(1);
+                }
+                break;
+
+            // we don't process other types of events
+            default:
+                break;
+            }
         }
+
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
+        {
+            window.close();
+        }
+
+        // -----------------------------First Tank----------------------------------------------
 
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
         {
@@ -45,6 +73,14 @@ int main_loop()
         {
             game.tank_move(0, 1);
         }
+
+        // if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
+        // {
+        //     game.tank_fire(0);
+        // }
+
+        // -----------------------------Second Tank----------------------------------------------
+
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
         {
             game.tank_rotate(1, 1);
@@ -64,6 +100,13 @@ int main_loop()
         {
             game.tank_move(1, 1);
         }
+
+        // if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q))
+        // {
+        //     game.tank_fire(1);
+        // }
+
+        // -------------------------------------------------------------------------
 
         // physics step()
         game.step(1.f / want_fps);
