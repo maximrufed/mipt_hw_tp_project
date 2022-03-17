@@ -47,6 +47,8 @@ public:
 	void tank_fire(int tankID);
 
 	void debug_draw(sf::RenderWindow &window);
+
+	int result();
 };
 
 /*

@@ -7,9 +7,10 @@
 
 #include "src/game.h"
 
-int main_loop()
+int s1 = 0, s2 = 0;
+
+int main_loop(sf::RenderWindow &window)
 {
-    sf::RenderWindow window(sf::VideoMode(800, 1020), "My window");
 
     BasicGame game = BasicGame();
     game.start(2);
@@ -114,6 +115,22 @@ int main_loop()
         // render
         game.debug_draw(window);
 
+        // draw scoreboard
+        sf::Font font; //шрифт
+        font.loadFromFile("../data/CyrilicOld.ttf");
+        sf::Text text(std::to_string(s1), font, 50);
+        text.setPosition(50, 650);
+        text.setFillColor(sf::Color::Red);
+        text.setStyle(sf::Text::Bold);
+        window.draw(text);
+
+        text.setPosition(750, 650);
+        text.setString(std::to_string(s2));
+        text.setColor(sf::Color::Blue);
+        window.draw(text);
+
+        window.display();
+
         sf::Int32 frame_duration = loop_timer.getElapsedTime().asMilliseconds();
         sf::Int32 time_to_sleep = int(1000.f / want_fps) - frame_duration;
         if (time_to_sleep > 0)
@@ -121,6 +138,17 @@ int main_loop()
             sf::sleep(sf::milliseconds(time_to_sleep));
         }
         loop_timer.restart();
+
+        int res = game.result();
+
+        if (res == 1 || res == 2)
+        {
+            return res;
+        }
+        else if (res == 3)
+        {
+            return 0;
+        }
     }
 
     return 0;
@@ -130,8 +158,23 @@ int main_loop()
 
 signed main()
 {
-    // game();
-    main_loop();
+    sf::RenderWindow window(sf::VideoMode(1200, 1020), "My window");
+
+    while (true)
+    {
+        int res = main_loop(window);
+        if (res == 1)
+        {
+            s1++;
+        }
+        else if (res == 2)
+        {
+            s2++;
+        }
+
+        if (!window.isOpen())
+            break;
+    }
 
     std::cout << "done" << std::endl;
     return 0;

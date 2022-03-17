@@ -216,21 +216,25 @@ void BasicGame::step(float timeStep)
 
 void BasicGame::tank_move(int tankID, float direction)
 {
-    tanks_[tankID]->move(direction);
+    if (tankID < tanks_.size())
+        tanks_[tankID]->move(direction);
 }
 
 void BasicGame::tank_rotate(int tankID, float direction)
 {
-    tanks_[tankID]->rotate(direction);
+    if (tankID < tanks_.size())
+        tanks_[tankID]->rotate(direction);
 }
 
 void BasicGame::tank_fire(int tankID)
 {
-    std::vector<Bullet *> bulletsAdd = tanks_[tankID]->fire(world_, nextBulletID_);
-
-    for (auto e : bulletsAdd)
+    if (tankID < tanks_.size())
     {
-        bullets_.push_back(e);
+        std::vector<Bullet *> bulletsAdd = tanks_[tankID]->fire(world_, nextBulletID_);
+        for (auto e : bulletsAdd)
+        {
+            bullets_.push_back(e);
+        }
     }
 }
 
@@ -254,7 +258,8 @@ void BasicGame::debug_draw(sf::RenderWindow &window)
         bullets_[i]->debug_draw(window);
     }
 
-    window.display();
+    // window.display();
+    // TODO - return back
 }
 
 void BasicGame::addWall(float x1, float y1, float x2, float y2)
@@ -286,5 +291,21 @@ void BasicGame::addWallBetweenCells(int x1, int y1, int x2, int y2)
     {
         // horisontal wall
         addWall(x1 * cellSize_, y2 * cellSize_, (x1 + 1) * cellSize_, y2 * cellSize_);
+    }
+}
+
+int BasicGame::result()
+{
+    if (tanks_.size() >= 2)
+    {
+        return 0;
+    }
+    else if (tanks_.size() == 0)
+    {
+        return 3;
+    }
+    else if (tanks_.size() == 1)
+    {
+        return tanks_[0]->getTankID() + 1;
     }
 }
