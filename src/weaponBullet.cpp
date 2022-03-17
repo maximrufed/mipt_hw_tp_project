@@ -1,11 +1,11 @@
 #include "weaponBullet.h"
 
-WeaponBullet::WeaponBullet()
+WeaponBullet::WeaponBullet(int id)
 {
-    // init
+    id_ = id;
 }
 
-std::vector<Bullet *> WeaponBullet::fire(b2World &world, Tank &tank)
+std::vector<Bullet *> WeaponBullet::fire(b2World &world, Tank &tank, int &nextBulletID)
 {
     if (nBulletsLeft_ <= 0)
     {
@@ -20,7 +20,11 @@ std::vector<Bullet *> WeaponBullet::fire(b2World &world, Tank &tank)
     pos.x += cos(angleRad) * length;
     pos.y += sin(angleRad) * length;
 
-    result.push_back(new BulletBasicTimer(world, bulletRadius_, bulletLiveTime_, pos, bulletVelocity_, angleRad));
+    Bullet *bullet = new BulletBasicTimer(world, bulletRadius_, bulletLiveTime_, pos, bulletVelocity_, angleRad);
+    bullet->setWeaponID(id_);
+    bullet->setTankID(tank.getTankID());
+    bullet->setBulletID(nextBulletID++);
+    result.push_back(bullet);
 
     nBulletsLeft_--;
 
@@ -34,4 +38,10 @@ bool WeaponBullet::isDead()
 
 void WeaponBullet::step(float timeStep)
 {
+}
+
+void WeaponBullet::bulletDie()
+{
+    std::cout << "left++" << std::endl;
+    nBulletsLeft_++;
 }

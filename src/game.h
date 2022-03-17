@@ -14,16 +14,8 @@
 #include "wall.h"
 #include "weapon.h"
 #include "weaponBullet.h"
-
-// class Game
-// {
-// public:
-// 	virtual void start() = 0;
-// 	virtual void step(float timeStep) = 0;
-// 	virtual void tank_move(int tankID, float direction) = 0;
-// 	virtual void tank_rotate(int tankID, float direction) = 0;
-// 	virtual void tank_fire() = 0;
-// };
+#include "classData.h"
+#include "contactListener.h"
 
 class BasicGame
 {
@@ -34,6 +26,10 @@ private:
 	std::vector<Wall> walls_;
 	std::vector<Bullet *> bullets_;
 	// std::vector<Bonus> bonuses_;
+
+	int nextTankID_ = 0;
+	int nextWeaponID_ = 0;
+	int nextBulletID_ = 0;
 
 	int sizeFieldX_ = 8;
 	int sizeFieldY_ = 6;
@@ -52,3 +48,15 @@ public:
 
 	void debug_draw(sf::RenderWindow &window);
 };
+
+/*
+
+Tank.filter.categoryBits = 0x0001
+Bullet.filter.categoryBits = 0x0002
+Wall.filter.categoryBits = 0x0004
+
+Tank.filter.maskBits = 0xFFFF
+Bullet.filter.maskBits = 0x0005
+Wall.filter.maskBits = 0xFFFF
+
+*/

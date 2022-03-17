@@ -23,6 +23,9 @@ Wall::Wall(b2World &world, b2Vec2 p1, b2Vec2 p2)
     fixtureBody.density = 1.0f;
     fixtureBody.friction = 0.3f;
 
+    fixtureBody.filter.categoryBits = 0x0004;
+    fixtureBody.filter.maskBits = 0xFFFF;
+
     body_->CreateFixture(&fixtureBody);
 }
 

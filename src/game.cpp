@@ -139,12 +139,17 @@ void BasicGame::start(int nTanks)
     {
         int index = uni(rng) % freeCells.size();
 
-        tanks_.push_back(Tank(world_, b2Vec2(50 + freeCells[index].first * 100, 50 + freeCells[index].second * 100), new WeaponBullet()));
+        tanks_.push_back(Tank(world_, b2Vec2(50 + freeCells[index].first * 100, 50 + freeCells[index].second * 100), new WeaponBullet(nextWeaponID_++), nextTankID_++));
 
         freeCells.erase(freeCells.begin() + index);
 
         tanks_.back().setColor(std::to_string(i)); // TODO remake after
     }
+
+    // init listener
+    ContactListener *listener = new ContactListener;
+
+    world_.SetContactListener(listener);
 
     // TODO - delete after test
     // test for bullet
@@ -153,6 +158,7 @@ void BasicGame::start(int nTanks)
 
 void BasicGame::step(float timeStep)
 {
+    // call step for all objects
     for (size_t i = 0; i < tanks_.size(); ++i)
     {
         tanks_[i].step(timeStep);
@@ -163,7 +169,46 @@ void BasicGame::step(float timeStep)
         bullets_[i]->step(timeStep);
     }
 
+    // call step for world
     world_.Step(timeStep, 8, 8);
+
+    // check for Tank death
+    for (int i = tanks_.size() - 1; i >= 0; --i)
+    {
+        if (tanks_[i].isDead())
+        {
+            tanks_.erase(tanks_.begin() + i);
+        }
+    }
+
+    // check for Bullet death
+    for (int i = 0; i < bullets_.size(); ++i)
+    {
+        if (bullets_[i]->isDead())
+        {
+            // say tank & weapon that bullet was killed
+            // TODO
+            // find tank & id & give him weaponID
+            int tankID = bullets_[i]->getTankID();
+            int weaponID = bullets_[i]->getWeaponID();
+            for (int i = 0; i < tanks_.size(); ++i)
+            {
+                if (tanks_[i].getTankID() == tankID)
+                {
+                    tanks_[i].bulletDie(weaponID);
+                    break;
+                }
+            }
+            bullets_[i]->destroy(world_);
+
+            delete bullets_[i];
+            bullets_.erase(bullets_.begin() + i);
+            i--;
+        }
+    }
+
+    // check for Bonux death
+    // TODO
 }
 
 void BasicGame::tank_move(int tankID, float direction)
@@ -178,7 +223,7 @@ void BasicGame::tank_rotate(int tankID, float direction)
 
 void BasicGame::tank_fire(int tankID)
 {
-    std::vector<Bullet *> bulletsAdd = tanks_[tankID].fire(world_);
+    std::vector<Bullet *> bulletsAdd = tanks_[tankID].fire(world_, nextBulletID_);
 
     for (auto e : bulletsAdd)
     {

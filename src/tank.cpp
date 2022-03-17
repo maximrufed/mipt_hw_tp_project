@@ -4,10 +4,20 @@
 
 void Tank::createTank(b2World &world, b2Vec2 position)
 {
+}
+
+Tank::Tank(b2World &world, b2Vec2 position, Weapon *weapon, int id)
+{
+    id_ = id;
+    weapon_ = weapon;
+
+    // -------------------------------create tank-----------------------------------------------
+
     b2BodyDef bodyDef;
     bodyDef.type = b2_dynamicBody;
     bodyDef.position.Set(position.x, position.y);
     bodyDef.bullet = true;
+
     body_ = world.CreateBody(&bodyDef);
 
     {
@@ -19,6 +29,9 @@ void Tank::createTank(b2World &world, b2Vec2 position)
         fixtureBody.shape = &dynamicBox;
         fixtureBody.density = 1.0f;
         fixtureBody.friction = 0.3f;
+
+        fixtureBody.filter.categoryBits = 0x0001;
+        fixtureBody.filter.maskBits = 0xFFFF;
 
         body_->CreateFixture(&fixtureBody);
     }
@@ -33,14 +46,16 @@ void Tank::createTank(b2World &world, b2Vec2 position)
         fixtureGun.density = 1.0f;
         fixtureGun.friction = 0.3f;
 
+        fixtureGun.filter.categoryBits = 0x0001;
+        fixtureGun.filter.maskBits = 0xFFFF;
+
         body_->CreateFixture(&fixtureGun);
     }
-}
 
-Tank::Tank(b2World &world, b2Vec2 position, Weapon *weapon)
-{
-    createTank(world, position);
-    weapon_ = weapon;
+    ClassData *tankData = new ClassData("tank", id);
+    body_->GetUserData().pointer = reinterpret_cast<uintptr_t>(tankData);
+
+    // --------------------------------------end-----------------------------------------------
 }
 
 void Tank::move(float direction)
@@ -53,13 +68,14 @@ void Tank::rotate(float direction)
     currentRotation_ -= direction;
 }
 
-std::vector<Bullet *> Tank::fire(b2World &world)
+std::vector<Bullet *> Tank::fire(b2World &world, int &nextBulletID)
 {
-    return weapon_->fire(world, *this);
+    return weapon_->fire(world, *this, nextBulletID);
 }
 
 void Tank::hit()
 {
+    alive_ = false;
 }
 
 void Tank::step(float timeStep)
@@ -78,6 +94,11 @@ void Tank::step(float timeStep)
 void Tank::setColor(std::string color)
 {
     color_ = color;
+}
+
+bool Tank::isDead()
+{
+    return !alive_;
 }
 
 void Tank::debug_draw(sf::RenderWindow &window)
@@ -132,4 +153,24 @@ float Tank::getSizeGunY()
 b2Body *Tank::getBody()
 {
     return body_;
+}
+
+int Tank::getTankID()
+{
+    return id_;
+}
+
+void Tank::setTankID(int id)
+{
+    id_ = id;
+}
+
+void Tank::bulletDie(int weaponID)
+{
+    std::cout << "bullet Die | weaponID = " << weaponID << std::endl;
+    std::cout << "weapon_->ID = " << weapon_->getID() << std::endl;
+    if (weapon_->getID() == weaponID)
+    {
+        weapon_->bulletDie();
+    }
 }

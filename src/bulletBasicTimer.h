@@ -21,4 +21,12 @@ public:
     bool isDead() override;
 
     void debug_draw(sf::RenderWindow &window) override;
+
+    void die() override;
+
+    void destroy(b2World &world) override;
+
+    void setBulletID(int id) override;
+
+    ~BulletBasicTimer();
 };

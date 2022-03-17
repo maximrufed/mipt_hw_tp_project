@@ -4,6 +4,7 @@
 
 #include "weapon.h"
 #include "bullet.h"
+#include "classData.h"
 
 #include <iostream>
 #include <vector>
@@ -15,8 +16,9 @@ class Bullet;
 class Tank
 {
 private:
-    int id_;
-    b2Body *body_;
+    bool alive_ = true;
+    int id_ = -1;
+    b2Body *body_ = nullptr;
     float sizeX_ = 30;
     float sizeY_ = 45;
     float sizeGunX_ = 8;
@@ -33,13 +35,15 @@ private:
     void createTank(b2World &world, b2Vec2 position);
 
 public:
-    Tank(b2World &world, b2Vec2 position, Weapon *weapon);
+    Tank(b2World &world, b2Vec2 position, Weapon *weapon, int id);
     void move(float direction);
     void rotate(float direction);
-    std::vector<Bullet *> fire(b2World &world);
+    std::vector<Bullet *> fire(b2World &world, int &nextBulletID);
     void hit();
     void step(float timeStep);
     void setColor(std::string color);
+
+    bool isDead();
 
     void debug_draw(sf::RenderWindow &window);
 
@@ -48,4 +52,9 @@ public:
     float getSizeGunX();
     float getSizeGunY();
     b2Body *getBody();
+
+    int getTankID();
+    void setTankID(int id);
+
+    void bulletDie(int weaponID);
 };

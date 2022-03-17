@@ -25,7 +25,13 @@ BulletBasicTimer::BulletBasicTimer(b2World &world, float radius, float aliveSeco
     fixtureBody.friction = 0.f;
     fixtureBody.restitution = 1.f;
 
+    fixtureBody.filter.categoryBits = 0x0002;
+    fixtureBody.filter.maskBits = 0x0005;
+
     body_->CreateFixture(&fixtureBody);
+
+    ClassData *tankData = new ClassData("bullet", bulletID_);
+    body_->GetUserData().pointer = reinterpret_cast<uintptr_t>(tankData);
 
     // apply velocity and angleRad
     body_->SetLinearVelocity(b2Vec2(cos(angleRad) * velocity, sin(angleRad) * velocity));
@@ -38,7 +44,6 @@ void BulletBasicTimer::step(float timeStep)
 
 bool BulletBasicTimer::isDead()
 {
-    // TODO
     if (timer_ <= 0)
     {
         // delete myself
@@ -57,4 +62,21 @@ void BulletBasicTimer::debug_draw(sf::RenderWindow &window)
     circle.setPosition(position.x, position.y);
     circle.setOrigin(radius_, radius_);
     window.draw(circle);
+}
+
+void BulletBasicTimer::setBulletID(int id)
+{
+    bulletID_ = id;
+    ClassData *tankData = new ClassData("bullet", bulletID_);
+    body_->GetUserData().pointer = reinterpret_cast<uintptr_t>(tankData);
+}
+
+void BulletBasicTimer::die()
+{
+    alive_ = false;
+}
+
+void BulletBasicTimer::destroy(b2World &world)
+{
+    world.DestroyBody(body_);
 }
