@@ -6,7 +6,7 @@ void Tank::createTank(b2World &world, b2Vec2 position)
 {
 }
 
-Tank::Tank(b2World &world, b2Vec2 position, Weapon *weapon, int id)
+Tank::Tank(b2World &world, b2Vec2 position, float angle, Weapon *weapon, int id)
 {
     id_ = id;
     weapon_ = weapon;

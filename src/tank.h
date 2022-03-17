@@ -35,7 +35,7 @@ private:
     void createTank(b2World &world, b2Vec2 position);
 
 public:
-    Tank(b2World &world, b2Vec2 position, Weapon *weapon, int id);
+    Tank(b2World &world, b2Vec2 position, float angle, Weapon *weapon, int id);
     void move(float direction);
     void rotate(float direction);
     std::vector<Bullet *> fire(b2World &world, int &nextBulletID);
