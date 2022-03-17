@@ -2,8 +2,8 @@
 #include <SFML/Graphics.hpp>
 #include "box2d/box2d.h"
 
-// #include "tank.h"
-// #include "bullet.h"
+#include "tank.h"
+#include "bullet.h"
 // #include "bulletBasicTimer.h"
 // #include "wall.h"
 // #include "weapon.h"

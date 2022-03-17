@@ -28,7 +28,7 @@ public:
 
     virtual void destroy(b2World &world) = 0;
 
-    virtual void setBulletID(int id);
+    void setBulletID(int id);
     void setTankID(int id);
     void setWeaponID(int id);
 

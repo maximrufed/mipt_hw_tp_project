@@ -7,7 +7,7 @@ void Bullet::die()
 
 void Bullet::setBulletID(int id)
 {
-    tankID_ = id;
+    bulletID_ = id;
 }
 
 void Bullet::setTankID(int id)

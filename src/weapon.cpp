@@ -1,5 +1,10 @@
 #include "weapon.h"
 
+bool Weapon::isDead()
+{
+    return !alive_;
+}
+
 int Weapon::getID()
 {
     return id_;

@@ -52,7 +52,7 @@ Tank::Tank(b2World &world, b2Vec2 position, Weapon *weapon, int id)
         body_->CreateFixture(&fixtureGun);
     }
 
-    ClassData *tankData = new ClassData("tank", id);
+    ClassData *tankData = new ClassData("tank", this);
     body_->GetUserData().pointer = reinterpret_cast<uintptr_t>(tankData);
 
     // --------------------------------------end-----------------------------------------------
@@ -75,6 +75,7 @@ std::vector<Bullet *> Tank::fire(b2World &world, int &nextBulletID)
 
 void Tank::hit()
 {
+    // std::cout << "hit" << std::endl;
     alive_ = false;
 }
 
@@ -99,6 +100,12 @@ void Tank::setColor(std::string color)
 bool Tank::isDead()
 {
     return !alive_;
+}
+
+void Tank::destroy(b2World &world)
+{
+    world.DestroyBody(body_);
+    delete weapon_;
 }
 
 void Tank::debug_draw(sf::RenderWindow &window)
@@ -167,8 +174,6 @@ void Tank::setTankID(int id)
 
 void Tank::bulletDie(int weaponID)
 {
-    std::cout << "bullet Die | weaponID = " << weaponID << std::endl;
-    std::cout << "weapon_->ID = " << weapon_->getID() << std::endl;
     if (weapon_->getID() == weaponID)
     {
         weapon_->bulletDie();

@@ -4,12 +4,10 @@
 
 #include <string>
 
-// #include "game.h"
-
 struct ClassData
 {
     std::string type = ""; // tank bullet
-    int id;
+    void *pointer;
 
-    ClassData(std::string type, int id) : type(type), id(id){};
+    ClassData(std::string type, void *pointer) : type(type), pointer(pointer){};
 };

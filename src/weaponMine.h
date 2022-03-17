@@ -9,17 +9,15 @@
 #include "bulletBasicTimer.h"
 #include "tank.h"
 
-class WeaponBullet : public Weapon
+class WeaponMine : public Weapon
 {
 private:
-    const float bulletRadius_ = 5;
-    const float bulletLiveTime_ = 15;
-    const float bulletVelocity_ = 400;
+    const float bulletSize_ = 15;
 
-    int nBulletsLeft_ = 5;
+    int nBulletsLeft_ = 3;
 
 public:
-    WeaponBullet(int id);
+    WeaponMine(int id);
 
     std::vector<Bullet *> fire(b2World &world, Tank &tank, int &nextBulletID) override;
 

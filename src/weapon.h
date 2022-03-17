@@ -13,12 +13,13 @@ class Bullet;
 class Weapon
 {
 protected:
+    int alive_ = true;
     int id_ = -1;
 
 public:
     virtual std::vector<Bullet *> fire(b2World &world, Tank &tank, int &nextBulletID) = 0;
 
-    virtual bool isDead() = 0;
+    virtual bool isDead();
 
     virtual void step(float timeStep) = 0;
 

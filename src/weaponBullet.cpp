@@ -16,7 +16,7 @@ std::vector<Bullet *> WeaponBullet::fire(b2World &world, Tank &tank, int &nextBu
 
     float angleRad = tank.getBody()->GetAngle() - 1.57;
     b2Vec2 pos = tank.getBody()->GetPosition();
-    float length = tank.getSizeGunY() + bulletRadius_;
+    float length = tank.getSizeGunY() + bulletRadius_ + 0.1;
     pos.x += cos(angleRad) * length;
     pos.y += sin(angleRad) * length;
 
@@ -31,17 +31,11 @@ std::vector<Bullet *> WeaponBullet::fire(b2World &world, Tank &tank, int &nextBu
     return result;
 }
 
-bool WeaponBullet::isDead()
-{
-    return false;
-}
-
 void WeaponBullet::step(float timeStep)
 {
 }
 
 void WeaponBullet::bulletDie()
 {
-    std::cout << "left++" << std::endl;
     nBulletsLeft_++;
 }

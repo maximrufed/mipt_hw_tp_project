@@ -6,15 +6,16 @@
 
 #include "bullet.h"
 
-class BulletBasicTimer : public Bullet
+class BulletMine : public Bullet
 {
 private:
     b2Body *body_ = nullptr;
-    float timer_ = 0;
-    float radius_ = 0;
+    float size_ = 0;
+    // bool activate_ = false;
+    // float timer_ = 0;
 
 public:
-    BulletBasicTimer(b2World &world, float radius, float aliveSeconds, b2Vec2 position, float velocity, float angleRad);
+    BulletMine(b2World &world, float radius, b2Vec2 position, float angleRad);
 
     void step(float timeStep) override;
 

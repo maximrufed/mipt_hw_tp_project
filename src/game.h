@@ -22,7 +22,7 @@ class BasicGame
 private:
 	b2Vec2 gravity_;
 	b2World world_;
-	std::vector<Tank> tanks_;
+	std::vector<Tank *> tanks_;
 	std::vector<Wall> walls_;
 	std::vector<Bullet *> bullets_;
 	// std::vector<Bonus> bonuses_;

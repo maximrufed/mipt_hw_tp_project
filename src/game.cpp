@@ -139,11 +139,11 @@ void BasicGame::start(int nTanks)
     {
         int index = uni(rng) % freeCells.size();
 
-        tanks_.push_back(Tank(world_, b2Vec2(50 + freeCells[index].first * 100, 50 + freeCells[index].second * 100), new WeaponBullet(nextWeaponID_++), nextTankID_++));
+        tanks_.push_back(new Tank(world_, b2Vec2(50 + freeCells[index].first * 100, 50 + freeCells[index].second * 100), new WeaponBullet(nextWeaponID_++), nextTankID_++));
 
         freeCells.erase(freeCells.begin() + index);
 
-        tanks_.back().setColor(std::to_string(i)); // TODO remake after
+        tanks_.back()->setColor(std::to_string(i)); // TODO remake after
     }
 
     // init listener
@@ -161,7 +161,7 @@ void BasicGame::step(float timeStep)
     // call step for all objects
     for (size_t i = 0; i < tanks_.size(); ++i)
     {
-        tanks_[i].step(timeStep);
+        tanks_[i]->step(timeStep);
     }
 
     for (size_t i = 0; i < bullets_.size(); ++i)
@@ -173,11 +173,14 @@ void BasicGame::step(float timeStep)
     world_.Step(timeStep, 8, 8);
 
     // check for Tank death
-    for (int i = tanks_.size() - 1; i >= 0; --i)
+    for (int i = 0; i < tanks_.size(); ++i)
     {
-        if (tanks_[i].isDead())
+        if (tanks_[i]->isDead())
         {
+            // std::cout << "tank number " << i << " is dead" << std::endl;
+            tanks_[i]->destroy(world_);
             tanks_.erase(tanks_.begin() + i);
+            i--;
         }
     }
 
@@ -193,9 +196,9 @@ void BasicGame::step(float timeStep)
             int weaponID = bullets_[i]->getWeaponID();
             for (int i = 0; i < tanks_.size(); ++i)
             {
-                if (tanks_[i].getTankID() == tankID)
+                if (tanks_[i]->getTankID() == tankID)
                 {
-                    tanks_[i].bulletDie(weaponID);
+                    tanks_[i]->bulletDie(weaponID);
                     break;
                 }
             }
@@ -213,17 +216,17 @@ void BasicGame::step(float timeStep)
 
 void BasicGame::tank_move(int tankID, float direction)
 {
-    tanks_[tankID].move(direction);
+    tanks_[tankID]->move(direction);
 }
 
 void BasicGame::tank_rotate(int tankID, float direction)
 {
-    tanks_[tankID].rotate(direction);
+    tanks_[tankID]->rotate(direction);
 }
 
 void BasicGame::tank_fire(int tankID)
 {
-    std::vector<Bullet *> bulletsAdd = tanks_[tankID].fire(world_, nextBulletID_);
+    std::vector<Bullet *> bulletsAdd = tanks_[tankID]->fire(world_, nextBulletID_);
 
     for (auto e : bulletsAdd)
     {
@@ -238,7 +241,7 @@ void BasicGame::debug_draw(sf::RenderWindow &window)
     // main draw
     for (size_t i = 0; i < tanks_.size(); ++i)
     {
-        tanks_[i].debug_draw(window);
+        tanks_[i]->debug_draw(window);
     }
 
     for (size_t i = 0; i < walls_.size(); ++i)

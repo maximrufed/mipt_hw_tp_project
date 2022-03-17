@@ -45,6 +45,8 @@ public:
 
     bool isDead();
 
+    void destroy(b2World &world);
+
     void debug_draw(sf::RenderWindow &window);
 
     void setWeapon(Weapon *weapon);
