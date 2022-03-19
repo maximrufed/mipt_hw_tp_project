@@ -1,18 +1,27 @@
-project(tanks LANGUAGES CXX)
 cmake_minimum_required(VERSION 3.16)
+project(tanks LANGUAGES CXX)
 
-add_executable(main main.cpp)
+set(sources
+    src/game.cpp
+    src/tank.cpp
+    src/wall.cpp
+    src/bullet.cpp
+    src/bulletBasicTimer.cpp
+    src/bulletMine.cpp
+    src/weapon.cpp
+    src/weaponBullet.cpp
+    src/weaponMine.cpp
+    src/classData.cpp
+    src/contactListener.cpp
+    src/constants.cpp
+)
 
-#link src
-add_subdirectory(src)
-# target_link_libraries(lib_src -lsfml-graphics -lsfml-window -lsfml-system)
-# target_link_libraries(lib_src box2d)
-# target_include_directories(lib_src .)
-target_link_libraries(main lib_src)
+add_executable(main main.cpp ${sources})
+
+target_include_directories(main PRIVATE src)
 
 # link SFML
 target_link_libraries(main sfml-graphics sfml-window sfml-system)
-
 
 # link box2d
 add_subdirectory(libs)
