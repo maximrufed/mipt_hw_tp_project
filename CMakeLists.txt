@@ -11,7 +11,7 @@ add_subdirectory(src)
 target_link_libraries(main lib_src)
 
 # link SFML
-target_link_libraries(main -lsfml-graphics -lsfml-window -lsfml-system)
+target_link_libraries(main sfml-graphics sfml-window sfml-system)
 
 
 # link box2d

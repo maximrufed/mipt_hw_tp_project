@@ -6,15 +6,16 @@
 
 #include "weapon.h"
 #include "bullet.h"
-#include "bulletBasicTimer.h"
+#include "bulletMine.h"
 #include "tank.h"
+#include "constants.h"
 
 class WeaponMine : public Weapon
 {
 private:
     const float bulletSize_ = 15;
 
-    int nBulletsLeft_ = 3;
+    int nBulletsLeft_ = 30;
 
 public:
     WeaponMine(int id);

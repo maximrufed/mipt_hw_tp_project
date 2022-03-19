@@ -139,7 +139,18 @@ void BasicGame::start(int nTanks)
     {
         int index = uni(rng) % freeCells.size();
 
-        tanks_.push_back(new Tank(world_, b2Vec2(50 + freeCells[index].first * 100, 50 + freeCells[index].second * 100), uni(rng), new WeaponBullet(nextWeaponID_++), nextTankID_++));
+        Weapon *weapon = nullptr;
+
+        if (i | 1)
+        {
+            weapon = new WeaponBullet(nextWeaponID_++);
+        }
+        else
+        {
+            weapon = new WeaponMine(nextWeaponID_++);
+        }
+
+        tanks_.push_back(new Tank(world_, b2Vec2(50 + freeCells[index].first * 100, 50 + freeCells[index].second * 100), uni(rng) % 100, weapon, nextTankID_++));
 
         freeCells.erase(freeCells.begin() + index);
 

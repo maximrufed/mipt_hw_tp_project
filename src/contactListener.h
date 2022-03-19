@@ -4,11 +4,8 @@
 
 #include "tank.h"
 #include "bullet.h"
-// #include "bulletBasicTimer.h"
-// #include "wall.h"
-// #include "weapon.h"
-// #include "weaponBullet.h"
 #include "classData.h"
+#include "constants.h"
 
 #include <iostream>
 

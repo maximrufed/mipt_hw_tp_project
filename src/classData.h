@@ -4,6 +4,8 @@
 
 #include <string>
 
+#include "constants.h"
+
 struct ClassData
 {
     std::string type = ""; // tank bullet

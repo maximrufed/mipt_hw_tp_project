@@ -12,17 +12,17 @@ std::vector<Bullet *> WeaponMine::fire(b2World &world, Tank &tank, int &nextBull
 
     std::vector<Bullet *> result;
 
-    // float angleRad = tank.getBody()->GetAngle() - 1.57;
-    // b2Vec2 pos = tank.getBody()->GetPosition();
-    // float length = tank.getSizeGunY() + bulletRadius_ + 0.1;
-    // pos.x += cos(angleRad) * length;
-    // pos.y += sin(angleRad) * length;
+    float angleRad = tank.getBody()->GetAngle() - 1.57;
+    b2Vec2 pos = tank.getBody()->GetPosition();
+    float length = tank.getSizeGunY() + bulletSize_ * 0.5 + 0.2;
+    pos.x += cos(angleRad) * length;
+    pos.y += sin(angleRad) * length;
 
-    // Bullet *bullet = new BulletBasicTimer(world, bulletRadius_, bulletLiveTime_, pos, bulletVelocity_, angleRad);
-    // bullet->setWeaponID(id_);
-    // bullet->setTankID(tank.getTankID());
-    // bullet->setBulletID(nextBulletID++);
-    // result.push_back(bullet);
+    Bullet *bullet = new BulletMine(world, bulletSize_, pos, angleRad);
+    bullet->setWeaponID(id_);
+    bullet->setTankID(tank.getTankID());
+    bullet->setBulletID(nextBulletID++);
+    result.push_back(bullet);
 
     nBulletsLeft_--;
 

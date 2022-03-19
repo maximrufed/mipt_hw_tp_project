@@ -4,6 +4,7 @@
 
 #include "weapon.h"
 #include "classData.h"
+#include "constants.h"
 
 class Weapon;
 

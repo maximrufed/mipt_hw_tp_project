@@ -11,6 +11,7 @@ add_library(lib_classData classData.cpp)
 add_library(lib_contactListener contactListener.cpp)
 add_library(lib_weaponMine weaponMine.cpp)
 add_library(lib_bulletMine bulletMine.cpp)
+add_library(lib_constants constants.cpp)
 
 target_link_libraries(lib_weaponBullet lib_bulletBasicTimer)
 target_link_libraries(lib_weapon lib_bullet)
@@ -64,12 +65,15 @@ target_link_libraries(lib_weaponMine box2d)
 target_link_libraries(lib_bulletMine -lsfml-graphics -lsfml-window -lsfml-system)
 target_link_libraries(lib_bulletMine box2d)
 
-# target_link_libraries(lib_weaponMine -lsfml-graphics -lsfml-window -lsfml-system)
-# target_link_libraries(lib_weaponMine box2d)
+target_link_libraries(lib_constants -lsfml-graphics -lsfml-window -lsfml-system)
+target_link_libraries(lib_constants box2d)
+
+# target_link_libraries(lib_constants -lsfml-graphics -lsfml-window -lsfml-system)
+# target_link_libraries(lib_constants box2d)
 
 # -----------------------------------------------------------------------------------------------
 
 add_library(lib_src INTERFACE)
-target_link_libraries(lib_src INTERFACE lib_game lib_tank lib_wall lib_bullet lib_bulletBasicTimer lib_weapon lib_weaponBullet lib_classData lib_contactListener lib_weaponMine lib_bulletMine)
+target_link_libraries(lib_src INTERFACE lib_game lib_tank lib_wall lib_bullet lib_bulletBasicTimer lib_weapon lib_weaponBullet lib_classData lib_contactListener lib_weaponMine lib_bulletMine lib_constants)
 
 # set_target_properties(lib_src PROPERTIES LINKER_LANGUAGE CXX)

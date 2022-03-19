@@ -11,11 +11,14 @@
 #include "tank.h"
 #include "bullet.h"
 #include "bulletBasicTimer.h"
+#include "bulletMine.h"
 #include "wall.h"
 #include "weapon.h"
 #include "weaponBullet.h"
+#include "weaponMine.h"
 #include "classData.h"
 #include "contactListener.h"
+#include "constants.h"
 
 class BasicGame
 {

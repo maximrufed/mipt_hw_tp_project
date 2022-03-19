@@ -6,7 +6,7 @@ void Tank::createTank(b2World &world, b2Vec2 position)
 {
 }
 
-Tank::Tank(b2World &world, b2Vec2 position, float angle, Weapon *weapon, int id)
+Tank::Tank(b2World &world, b2Vec2 position, float angleRad, Weapon *weapon, int id)
 {
     id_ = id;
     weapon_ = weapon;
@@ -47,10 +47,12 @@ Tank::Tank(b2World &world, b2Vec2 position, float angle, Weapon *weapon, int id)
         fixtureGun.friction = 0.3f;
 
         fixtureGun.filter.categoryBits = 0x0001;
-        fixtureGun.filter.maskBits = 0xFFFF;
+        fixtureGun.filter.maskBits = 0xFFFD;
 
         body_->CreateFixture(&fixtureGun);
     }
+
+    body_->SetTransform(position, angleRad);
 
     ClassData *tankData = new ClassData("tank", this);
     body_->GetUserData().pointer = reinterpret_cast<uintptr_t>(tankData);
@@ -114,7 +116,7 @@ void Tank::debug_draw(sf::RenderWindow &window)
     float rotation = body_->GetAngle();
 
     {
-        sf::RectangleShape rectangle(sf::Vector2f(sizeX_, sizeY_));
+        sf::RectangleShape rectangle(sf::Vector2f(sizeX_ * graphics::SCALE, sizeY_));
         if (color_ == "0")
         {
             rectangle.setFillColor(sf::Color(224, 26, 79, 255));

@@ -8,13 +8,14 @@
 #include "bullet.h"
 #include "bulletBasicTimer.h"
 #include "tank.h"
+#include "constants.h"
 
 class WeaponBullet : public Weapon
 {
 private:
     const float bulletRadius_ = 5;
     const float bulletLiveTime_ = 15;
-    const float bulletVelocity_ = 400;
+    const float bulletVelocity_ = 1000000;
 
     int nBulletsLeft_ = 5;
 

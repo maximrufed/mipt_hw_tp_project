@@ -5,6 +5,7 @@
 #include "weapon.h"
 #include "bullet.h"
 #include "classData.h"
+#include "constants.h"
 
 #include <iostream>
 #include <vector>
@@ -23,7 +24,7 @@ private:
     float sizeY_ = 45;
     float sizeGunX_ = 8;
     float sizeGunY_ = 32;
-    float linearVelocity_ = 400;
+    float linearVelocity_ = 100;
     float angularVelocity_ = 4;
 
     float currentMove_ = 0;     // 1 or -1
@@ -35,7 +36,7 @@ private:
     void createTank(b2World &world, b2Vec2 position);
 
 public:
-    Tank(b2World &world, b2Vec2 position, float angle, Weapon *weapon, int id);
+    Tank(b2World &world, b2Vec2 position, float angleRad, Weapon *weapon, int id);
     void move(float direction);
     void rotate(float direction);
     std::vector<Bullet *> fire(b2World &world, int &nextBulletID);

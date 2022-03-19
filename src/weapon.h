@@ -6,6 +6,7 @@
 
 #include "bullet.h"
 #include "tank.h"
+#include "constants.h"
 
 class Tank;
 class Bullet;

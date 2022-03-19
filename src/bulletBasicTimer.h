@@ -5,6 +5,7 @@
 #include <iostream>
 
 #include "bullet.h"
+#include "constants.h"
 
 class BulletBasicTimer : public Bullet
 {

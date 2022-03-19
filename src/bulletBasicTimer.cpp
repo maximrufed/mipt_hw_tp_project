@@ -35,6 +35,7 @@ BulletBasicTimer::BulletBasicTimer(b2World &world, float radius, float aliveSeco
 
     // apply velocity and angleRad
     body_->SetLinearVelocity(b2Vec2(cos(angleRad) * velocity, sin(angleRad) * velocity));
+    std::cout << "vel = " << velocity << std::endl;
 }
 
 void BulletBasicTimer::step(float timeStep)
