@@ -16,7 +16,7 @@ Tank::Tank(b2World &world, b2Vec2 position, float angleRad, Weapon *weapon, int 
     b2BodyDef bodyDef;
     bodyDef.type = b2_dynamicBody;
     bodyDef.position.Set(position.x, position.y);
-    bodyDef.bullet = true;
+    // bodyDef.bullet = true;
 
     body_ = world.CreateBody(&bodyDef);
 
@@ -116,7 +116,7 @@ void Tank::debug_draw(sf::RenderWindow &window)
     float rotation = body_->GetAngle();
 
     {
-        sf::RectangleShape rectangle(sf::Vector2f(sizeX_ * graphics::SCALE, sizeY_));
+        sf::RectangleShape rectangle(sf::Vector2f(sizeX_ * graphics::SCALE, sizeY_ * graphics::SCALE));
         if (color_ == "0")
         {
             rectangle.setFillColor(sf::Color(224, 26, 79, 255));
@@ -126,20 +126,18 @@ void Tank::debug_draw(sf::RenderWindow &window)
             rectangle.setFillColor(sf::Color(66, 0, 57, 255));
         }
         // rectangle.setFillColor(sf::Color::Red);
-        rectangle.setPosition(position.x, position.y);
-        const float DEG = 57.2977f;
-        rectangle.rotate(rotation * DEG);
-        rectangle.setOrigin(sizeX_ * 0.5, sizeY_ * 0.5);
+        rectangle.setPosition(position.x * graphics::SCALE, position.y * graphics::SCALE);
+        rectangle.rotate(rotation * graphics::DEG);
+        rectangle.setOrigin(sizeX_ * 0.5 * graphics::SCALE, sizeY_ * 0.5 * graphics::SCALE);
         window.draw(rectangle);
     }
 
     {
-        sf::RectangleShape rectangle(sf::Vector2f(sizeGunX_, sizeGunY_));
+        sf::RectangleShape rectangle(sf::Vector2f(sizeGunX_ * graphics::SCALE, sizeGunY_ * graphics::SCALE));
         rectangle.setFillColor(sf::Color::Cyan);
-        rectangle.setPosition(position.x, position.y);
-        const float DEG = 57.2977f;
-        rectangle.setOrigin(sizeGunX_ * 0.5, sizeGunY_);
-        rectangle.rotate(rotation * DEG);
+        rectangle.setPosition(position.x * graphics::SCALE, position.y * graphics::SCALE);
+        rectangle.setOrigin(sizeGunX_ * 0.5 * graphics::SCALE, sizeGunY_ * graphics::SCALE);
+        rectangle.rotate(rotation * graphics::DEG);
         window.draw(rectangle);
     }
 }

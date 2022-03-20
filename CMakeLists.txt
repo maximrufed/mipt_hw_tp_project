@@ -5,15 +5,16 @@ set(sources
     src/game.cpp
     src/tank.cpp
     src/wall.cpp
+    src/classData.cpp
+    src/contactListener.cpp
+    src/constants.cpp
     src/bullet/bullet.cpp
     src/bullet/bulletBasicTimer.cpp
     src/bullet/bulletMine.cpp
     src/weapon/weapon.cpp
     src/weapon/weaponBullet.cpp
     src/weapon/weaponMine.cpp
-    src/classData.cpp
-    src/contactListener.cpp
-    src/constants.cpp
+    src/bonus/bonus.cpp
 )
 
 add_executable(main main.cpp ${sources})

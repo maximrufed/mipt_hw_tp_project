@@ -63,12 +63,11 @@ void BulletMine::debug_draw(sf::RenderWindow &window)
     b2Vec2 position = body_->GetPosition();
     float rotation = body_->GetAngle();
 
-    sf::RectangleShape rectangle(sf::Vector2f(size_, size_));
+    sf::RectangleShape rectangle(sf::Vector2f(size_ * graphics::SCALE, size_ * graphics::SCALE));
     rectangle.setFillColor(sf::Color::Black);
-    rectangle.setPosition(position.x, position.y);
-    const float DEG = 57.2977f;
-    rectangle.rotate(rotation * DEG);
-    rectangle.setOrigin(size_ * 0.5, size_ * 0.5);
+    rectangle.setPosition(position.x * graphics::SCALE, position.y * graphics::SCALE);
+    rectangle.rotate(rotation * graphics::DEG);
+    rectangle.setOrigin(size_ * 0.5 * graphics::SCALE, size_ * 0.5 * graphics::SCALE);
     window.draw(rectangle);
 }
 

@@ -9,5 +9,6 @@ namespace math
 
 namespace graphics
 {
-    const float SCALE = 1; // 1 meter = 100 pixels
+    const float SCALE = 10; // 1 meter = 100 pixels
+    const float DEG = 57.2977f;
 };

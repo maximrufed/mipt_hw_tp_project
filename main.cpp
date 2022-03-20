@@ -126,7 +126,7 @@ int main_loop(sf::RenderWindow &window)
 
         text.setPosition(750, 650);
         text.setString(std::to_string(s2));
-        text.setColor(sf::Color::Blue);
+        text.setFillColor(sf::Color::Blue);
         window.draw(text);
 
         window.display();

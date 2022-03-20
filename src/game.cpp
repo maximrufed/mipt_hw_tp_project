@@ -11,16 +11,16 @@ void BasicGame::start(int nTanks)
     for (int x = 0; x < sizeFieldX_; ++x)
     {
         // add wall (x * cellSize, 0) -- ((x + 1) * cellSize, sizeFieldY_ * cellSize)
-        addWall(x * cellSize_, 0, (x + 1) * cellSize_, 0);
-        addWall(x * cellSize_, sizeFieldY_ * cellSize_, (x + 1) * cellSize_, sizeFieldY_ * cellSize_);
+        addWall(x * wallLength_, 0, (x + 1) * wallLength_, 0);
+        addWall(x * wallLength_, sizeFieldY_ * wallLength_, (x + 1) * wallLength_, sizeFieldY_ * wallLength_);
     }
 
     // vertical (up & down)
     for (int y = 0; y < sizeFieldY_; ++y)
     {
         // add wall (0, y * cellSize) -- (sizeFieldX_ * cellSize, (y + 1) * cellSize)
-        addWall(0, y * cellSize_, 0, (y + 1) * cellSize_);
-        addWall(sizeFieldX_ * cellSize_, y * cellSize_, sizeFieldX_ * cellSize_, (y + 1) * cellSize_);
+        addWall(0, y * wallLength_, 0, (y + 1) * wallLength_);
+        addWall(sizeFieldX_ * wallLength_, y * wallLength_, sizeFieldX_ * wallLength_, (y + 1) * wallLength_);
     }
 
     // init inside walls
@@ -150,7 +150,7 @@ void BasicGame::start(int nTanks)
             weapon = new WeaponMine(nextWeaponID_++);
         }
 
-        tanks_.push_back(new Tank(world_, b2Vec2(50 + freeCells[index].first * 100, 50 + freeCells[index].second * 100), uni(rng) % 100, weapon, nextTankID_++));
+        tanks_.push_back(new Tank(world_, b2Vec2(wallLength_ * 0.5 + freeCells[index].first * wallLength_, wallLength_ * 0.5 + freeCells[index].second * wallLength_), uni(rng) % 100, weapon, nextTankID_++));
 
         freeCells.erase(freeCells.begin() + index);
 
@@ -296,12 +296,12 @@ void BasicGame::addWallBetweenCells(int x1, int y1, int x2, int y2)
     if (y1 == y2)
     {
         // vertical wall
-        addWall(x2 * cellSize_, y1 * cellSize_, x2 * cellSize_, (y1 + 1) * cellSize_);
+        addWall(x2 * wallLength_, y1 * wallLength_, x2 * wallLength_, (y1 + 1) * wallLength_);
     }
     else
     {
         // horisontal wall
-        addWall(x1 * cellSize_, y2 * cellSize_, (x1 + 1) * cellSize_, y2 * cellSize_);
+        addWall(x1 * wallLength_, y2 * wallLength_, (x1 + 1) * wallLength_, y2 * wallLength_);
     }
 }
 

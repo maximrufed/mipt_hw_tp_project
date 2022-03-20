@@ -13,14 +13,14 @@
 class WeaponMine : public Weapon
 {
 private:
-    const float bulletSize_ = 15;
+    const float bulletSize_ = 1.5;
 
-    int nBulletsLeft_ = 30;
+    int nBulletsLeft_ = 3;
 
 public:
     WeaponMine(int id);
 
-    std::vector<Bullet *> fire(b2World &world, Tank &tank, int &nextBulletID) override;
+    std::vector<Bullet *> fire(b2World &world, int &nextBulletID) override;
 
     void step(float timeStep) override;
 

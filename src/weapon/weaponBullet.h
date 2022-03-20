@@ -13,16 +13,16 @@
 class WeaponBullet : public Weapon
 {
 private:
-    const float bulletRadius_ = 5;
+    const float bulletRadius_ = 0.5;
     const float bulletLiveTime_ = 15;
-    const float bulletVelocity_ = 1000000;
+    const float bulletVelocity_ = 16;
 
     int nBulletsLeft_ = 5;
 
 public:
     WeaponBullet(int id);
 
-    std::vector<Bullet *> fire(b2World &world, Tank &tank, int &nextBulletID) override;
+    std::vector<Bullet *> fire(b2World &world, int &nextBulletID) override;
 
     void step(float timeStep) override;
 

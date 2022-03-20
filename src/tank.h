@@ -20,12 +20,12 @@ private:
     bool alive_ = true;
     int id_ = -1;
     b2Body *body_ = nullptr;
-    float sizeX_ = 30;
-    float sizeY_ = 45;
-    float sizeGunX_ = 8;
-    float sizeGunY_ = 32;
-    float linearVelocity_ = 100;
-    float angularVelocity_ = 4;
+    float sizeX_ = 3;
+    float sizeY_ = 4.5;
+    float sizeGunX_ = 0.8;
+    float sizeGunY_ = 3.2;
+    float linearVelocity_ = 15;
+    float angularVelocity_ = 6;
 
     float currentMove_ = 0;     // 1 or -1
     float currentRotation_ = 0; // 1 or -1

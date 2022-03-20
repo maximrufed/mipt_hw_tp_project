@@ -58,10 +58,10 @@ void BulletBasicTimer::debug_draw(sf::RenderWindow &window)
 
     b2Vec2 position = body_->GetPosition();
 
-    sf::CircleShape circle(radius_);
+    sf::CircleShape circle(radius_ * graphics::SCALE);
     circle.setFillColor(sf::Color::Black);
-    circle.setPosition(position.x, position.y);
-    circle.setOrigin(radius_, radius_);
+    circle.setPosition(position.x * graphics::SCALE, position.y * graphics::SCALE);
+    circle.setOrigin(radius_ * graphics::SCALE, radius_ * graphics::SCALE);
     window.draw(circle);
 }
 

@@ -36,8 +36,8 @@ private:
 
 	int sizeFieldX_ = 8;
 	int sizeFieldY_ = 6;
-	float cellSize_ = 100;
-	const float wallWidth_ = 2;
+	float wallLength_ = 10;
+	const float wallWidth_ = 0.2;
 	void addWallBetweenCells(int x1, int y1, int x2, int y2);
 	void addWall(float x1, float y1, float x2, float y2);
 
