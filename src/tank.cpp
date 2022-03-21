@@ -2,14 +2,11 @@
 
 #include <iostream>
 
-void Tank::createTank(b2World &world, b2Vec2 position)
-{
-}
-
 Tank::Tank(b2World &world, b2Vec2 position, float angleRad, Weapon *weapon, int id)
 {
     id_ = id;
     weapon_ = weapon;
+    weapon_->setTank(this);
 
     // -------------------------------create tank-----------------------------------------------
 
@@ -72,7 +69,7 @@ void Tank::rotate(float direction)
 
 std::vector<Bullet *> Tank::fire(b2World &world, int &nextBulletID)
 {
-    return weapon_->fire(world, *this, nextBulletID);
+    return weapon_->fire(world, nextBulletID);
 }
 
 void Tank::hit()

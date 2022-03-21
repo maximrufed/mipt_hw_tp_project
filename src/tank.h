@@ -33,8 +33,6 @@ private:
 
     Weapon *weapon_;
 
-    void createTank(b2World &world, b2Vec2 position);
-
 public:
     Tank(b2World &world, b2Vec2 position, float angleRad, Weapon *weapon, int id);
     void move(float direction);
