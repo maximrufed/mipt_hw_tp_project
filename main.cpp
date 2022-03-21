@@ -2,7 +2,6 @@
 #include "box2d/box2d.h"
 
 #include <SFML/Graphics.hpp>
-#include <bits/stdc++.h>
 #include <unistd.h>
 
 #include "src/game.h"
