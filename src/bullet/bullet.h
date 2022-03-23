@@ -1,4 +1,5 @@
 #pragma once
+
 #include <SFML/Graphics.hpp>
 #include "box2d/box2d.h"
 
@@ -14,7 +15,7 @@ protected:
     bool alive_ = true;
     Weapon *weapon_ = nullptr;
 
-    int bulletID_;
+    int bulletID_ = -1;
     int tankID_ = -1;
     int weaponID_ = -1;
 
@@ -27,13 +28,15 @@ public:
 
     virtual void die();
 
-    virtual void destroy(b2World &world) = 0;
-
     void setBulletID(int id);
+
     void setTankID(int id);
+
     void setWeaponID(int id);
 
     int getBulletID();
+
     int getTankID();
+
     int getWeaponID();
 };

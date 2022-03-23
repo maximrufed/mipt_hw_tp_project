@@ -24,26 +24,25 @@ int main_loop(sf::RenderWindow &window)
         {
             switch (event.type)
             {
-            // window closed
-            case sf::Event::Closed:
-                window.close();
-                break;
+                // window closed
+                case sf::Event::Closed:
+                    window.close();
+                    break;
 
-            // key pressed
-            case sf::Event::KeyPressed:
-                if (event.key.code == sf::Keyboard::Space)
-                {
-                    game.tank_fire(0);
-                }
-                else if (event.key.code == sf::Keyboard::Q)
-                {
-                    game.tank_fire(1);
-                }
-                break;
+                    // key pressed
+                case sf::Event::KeyPressed:
+                    if (event.key.code == sf::Keyboard::Space)
+                    {
+                        game.tank_fire(0);
+                    } else if (event.key.code == sf::Keyboard::Q)
+                    {
+                        game.tank_fire(1);
+                    }
+                    break;
 
-            // we don't process other types of events
-            default:
-                break;
+                    // we don't process other types of events
+                default:
+                    break;
             }
         }
 
@@ -73,11 +72,6 @@ int main_loop(sf::RenderWindow &window)
         {
             game.tank_move(0, 1);
         }
-
-        // if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
-        // {
-        //     game.tank_fire(0);
-        // }
 
         // -----------------------------Second Tank----------------------------------------------
 
@@ -138,13 +132,12 @@ int main_loop(sf::RenderWindow &window)
         }
         loop_timer.restart();
 
-        int res = game.result();
+        int res = game.getResult();
 
         if (res == 1 || res == 2)
         {
             return res;
-        }
-        else if (res == 3)
+        } else if (res == -1)
         {
             return 0;
         }
@@ -165,8 +158,7 @@ signed main()
         if (res == 1)
         {
             s1++;
-        }
-        else if (res == 2)
+        } else if (res == 2)
         {
             s2++;
         }

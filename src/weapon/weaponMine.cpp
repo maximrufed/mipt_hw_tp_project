@@ -1,8 +1,9 @@
 #include "weaponMine.h"
 
-WeaponMine::WeaponMine(int id)
+WeaponMine::WeaponMine(Tank *tank, int id)
 {
     id_ = id;
+    tank_ = tank;
 }
 
 std::vector<Bullet *> WeaponMine::fire(b2World &world, int &nextBulletID)
@@ -14,7 +15,7 @@ std::vector<Bullet *> WeaponMine::fire(b2World &world, int &nextBulletID)
 
     float angleRad = tank_->getBody()->GetAngle() - 1.57;
     b2Vec2 pos = tank_->getBody()->GetPosition();
-    float length = tank_->getSizeGunY() + bulletSize_ * 0.5 + 0.2;
+    float length = (tank_->getSizeY() + bulletSize_) * 0.5 + 0.2;
     pos.x += cos(angleRad) * length;
     pos.y += sin(angleRad) * length;
 
@@ -40,4 +41,18 @@ void WeaponMine::step(float timeStep)
 void WeaponMine::bulletDie()
 {
     // nothing
+}
+
+WeaponMine::~WeaponMine()
+{
+    tank_ = nullptr;
+}
+
+void WeaponMine::setTank(Tank *tank)
+{
+    tank_ = tank;
+}
+
+void WeaponMine::debug_draw(sf::RenderWindow &window)
+{
 }

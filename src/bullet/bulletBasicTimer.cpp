@@ -1,6 +1,7 @@
 #include "bulletBasicTimer.h"
 
-BulletBasicTimer::BulletBasicTimer(b2World &world, float radius, float aliveSeconds, b2Vec2 position, float velocity, float angleRad)
+BulletBasicTimer::BulletBasicTimer(b2World &world, float radius, float aliveSeconds, b2Vec2 position, float velocity,
+                                   float angleRad)
 {
     timer_ = aliveSeconds;
     radius_ = radius;
@@ -35,7 +36,6 @@ BulletBasicTimer::BulletBasicTimer(b2World &world, float radius, float aliveSeco
 
     // apply velocity and angleRad
     body_->SetLinearVelocity(b2Vec2(cos(angleRad) * velocity, sin(angleRad) * velocity));
-    std::cout << "vel = " << velocity << std::endl;
 }
 
 void BulletBasicTimer::step(float timeStep)
@@ -70,7 +70,7 @@ void BulletBasicTimer::die()
     alive_ = false;
 }
 
-void BulletBasicTimer::destroy(b2World &world)
+BulletBasicTimer::~BulletBasicTimer()
 {
-    world.DestroyBody(body_);
+    body_->GetWorld()->DestroyBody(body_);
 }

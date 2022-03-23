@@ -15,8 +15,6 @@ class Bullet;
 class Weapon
 {
 protected:
-    b2Body *body_ = nullptr;
-    Tank *tank_ = nullptr;
     int alive_ = true;
     int id_ = -1;
 
@@ -27,10 +25,12 @@ public:
 
     virtual void step(float timeStep) = 0;
 
-    virtual void setTank(Tank *tank);
-
     int getID();
     void setID(int id);
 
     virtual void bulletDie() = 0;
+
+    virtual void debug_draw(sf::RenderWindow &window) = 0;
+
+    virtual ~Weapon();
 };

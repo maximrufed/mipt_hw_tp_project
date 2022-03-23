@@ -9,7 +9,6 @@ BulletMine::BulletMine(b2World &world, float size, b2Vec2 position, float angleR
 
     b2BodyDef bodyDef;
     bodyDef.type = b2_staticBody;
-    bodyDef.position.Set(position.x, position.y);
     bodyDef.bullet = true;
 
     body_ = world.CreateBody(&bodyDef);
@@ -76,7 +75,8 @@ void BulletMine::die()
     alive_ = false;
 }
 
-void BulletMine::destroy(b2World &world)
+BulletMine::~BulletMine()
 {
-    world.DestroyBody(body_);
+    body_->GetWorld()->DestroyBody(body_);
+    body_ = nullptr;
 }
