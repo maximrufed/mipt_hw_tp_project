@@ -55,4 +55,13 @@ void WeaponMine::setTank(Tank *tank)
 
 void WeaponMine::debug_draw(sf::RenderWindow &window)
 {
+    b2Vec2 position = tank_->getBody()->GetPosition();
+    float rotation = tank_->getBody()->GetAngle();
+
+    sf::RectangleShape rectangle(sf::Vector2f(sizeGunX_ * graphics::SCALE, sizeGunY_ * graphics::SCALE));
+    rectangle.setFillColor(sf::Color(194, 178, 180, 255));
+    rectangle.setPosition(position.x * graphics::SCALE, position.y * graphics::SCALE);
+    rectangle.rotate(rotation * graphics::DEG);
+    rectangle.setOrigin(sizeGunX_ * 0.5 * graphics::SCALE, sizeGunY_ * 0.5 * graphics::SCALE);
+    window.draw(rectangle);
 }

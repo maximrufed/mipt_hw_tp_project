@@ -140,8 +140,8 @@ void BasicGame::initTanks(int nTanks)
         tanks_.push_back(currentTank);
 
         Weapon *weapon = nullptr;
-        //        weapon = new WeaponBullet(world_, currentTank, nextWeaponID_++);
-        weapon = new WeaponMine(currentTank, nextWeaponID_++);
+        weapon = new WeaponBullet(world_, currentTank, nextWeaponID_++);
+        // weapon = new WeaponMine(currentTank, nextWeaponID_++);
         currentTank->setWeapon(weapon);
         weapon = nullptr;
 
@@ -150,32 +150,64 @@ void BasicGame::initTanks(int nTanks)
     }
 }
 
+void BasicGame::initBonuses()
+{
+    nextBonusTimer_ = 3 + math::getRand() % 3;
+}
+
 void BasicGame::start(int nTanks)
 {
     initRandomMaze();
 
     initTanks(nTanks);
 
+    initBonuses();
+
     // init collision listener
-    auto *listener = new ContactListener;
+    auto *listener = new ContactListener();
     world_.SetContactListener(listener);
+}
+
+void BasicGame::bonusStep(float timeStep)
+{
+    nextBonusTimer_ -= timeStep;
+
+    if (nextBonusTimer_ <= 0)
+    {
+        nextBonusTimer_ = 3 + math::getRand() % 3;
+
+        // generate random bonus
+        b2Vec2 position(wallLength_ * (0.5 + math::getRand() % sizeFieldX_),
+                        wallLength_ * (0.5 + math::getRand() % sizeFieldY_));
+        Bonus *bonus = new BonusMine(world_, position, math::getRand() % 100, &nextWeaponID_); // TODO
+        bonuses_.push_back(bonus);
+    }
 }
 
 void BasicGame::step(float timeStep)
 {
+
+    // call step for world
+    world_.Step(timeStep, 8, 8);
 
     // call step for all objects
     for (auto &tank : tanks_)
     {
         tank->step(timeStep);
     }
+
     for (auto &bullet : bullets_)
     {
         bullet->step(timeStep);
     }
 
-    // call step for world
-    world_.Step(timeStep, 8, 8);
+    for (auto &bonus : bonuses_)
+    {
+        bonus->step(timeStep);
+    }
+
+    // step for bonus factory
+    bonusStep(timeStep);
 
     // check for death for all objects
     // check for Tank death
@@ -208,7 +240,17 @@ void BasicGame::step(float timeStep)
 
             delete bullets_[i];
             bullets_.erase(bullets_.begin() + i);
-            i--;
+            --i;
+        }
+    }
+
+    for (int i = 0; i < bonuses_.size(); ++i)
+    {
+        if (bonuses_[i]->isDead())
+        {
+            delete bonuses_[i];
+            bonuses_.erase(bonuses_.begin() + i);
+            --i;
         }
     }
 }
@@ -255,6 +297,11 @@ void BasicGame::debug_draw(sf::RenderWindow &window)
     for (size_t i = 0; i < bullets_.size(); ++i)
     {
         bullets_[i]->debug_draw(window);
+    }
+
+    for (size_t i = 0; i < bonuses_.size(); ++i)
+    {
+        bonuses_[i]->debug_draw(window);
     }
 
     // window.display();

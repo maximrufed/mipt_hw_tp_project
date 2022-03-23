@@ -18,6 +18,7 @@ set(sources
     src/weapon/weaponBullet.cpp
     src/weapon/weaponMine.cpp
     src/bonus/bonus.cpp
+    src/bonus/bonusMine.cpp
 )
 
 add_executable(main main.cpp ${sources})
@@ -25,6 +26,7 @@ add_executable(main main.cpp ${sources})
 include_directories(src)
 include_directories(src/weapon)
 include_directories(src/bullet)
+include_directories(src/bonus)
 
 target_include_directories(main PRIVATE src)
 

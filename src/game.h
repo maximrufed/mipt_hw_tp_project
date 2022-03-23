@@ -20,6 +20,8 @@
 #include "classData.h"
 #include "contactListener.h"
 #include "constants.h"
+#include "bonus.h"
+#include "bonusMine.h"
 
 class BasicGame
 {
@@ -29,11 +31,13 @@ private:
     std::vector<Tank *> tanks_;
     std::vector<Wall> walls_;
     std::vector<Bullet *> bullets_;
-    // std::vector<Bonus> bonuses_;
+    std::vector<Bonus *> bonuses_;
 
     int nextTankID_ = 0;
     int nextWeaponID_ = 0;
     int nextBulletID_ = 0;
+
+    float nextBonusTimer_ = 0;
 
     int sizeFieldX_ = 8;
     int sizeFieldY_ = 6;
@@ -43,6 +47,14 @@ private:
     void addWallBetweenCells(int x1, int y1, int x2, int y2);
 
     void addWall(float x1, float y1, float x2, float y2);
+
+    void initRandomMaze();
+
+    void initTanks(int nTanks);
+
+    void initBonuses();
+
+    void bonusStep(float timeStep);
 
 public:
     BasicGame();
@@ -60,10 +72,6 @@ public:
     void debug_draw(sf::RenderWindow &window);
 
     int getResult();
-
-    void initRandomMaze();
-
-    void initTanks(int nTanks);
 };
 
 /*

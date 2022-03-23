@@ -31,7 +31,7 @@ private:
     float currentRotation_ = 0; // 1 or -1
     std::string color_ = "";
 
-    Weapon *weapon_;
+    Weapon *weapon_ = nullptr;
 
 public:
     Tank(b2World &world, b2Vec2 position, float angleRad, int id);
@@ -65,6 +65,8 @@ public:
 
     // TODO graphics
     void debug_draw(sf::RenderWindow &window);
+
+    float getSizeX();
 
     float getSizeY();
 };

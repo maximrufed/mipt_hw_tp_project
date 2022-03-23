@@ -10,7 +10,7 @@ Tank::Tank(b2World &world, b2Vec2 position, float angleRad, int id)
 
     b2BodyDef bodyDef;
     bodyDef.type = b2_dynamicBody;
-    // bodyDef.bullet = true;
+    bodyDef.bullet = true;
     body_ = world.CreateBody(&bodyDef);
     b2PolygonShape dynamicBox;
     b2Vec2 center(0, 0);
@@ -21,6 +21,7 @@ Tank::Tank(b2World &world, b2Vec2 position, float angleRad, int id)
     fixtureBody.friction = 0.3f;
     fixtureBody.filter.categoryBits = 0x0001;
     fixtureBody.filter.maskBits = 0xFFFF;
+
     body_->CreateFixture(&fixtureBody);
     body_->SetTransform(position, angleRad);
 
@@ -99,11 +100,11 @@ void Tank::debug_draw(sf::RenderWindow &window)
         sf::RectangleShape rectangle(sf::Vector2f(sizeX_ * graphics::SCALE, sizeY_ * graphics::SCALE));
         if (color_ == "0")
         {
-            rectangle.setFillColor(sf::Color(224, 26, 79, 255));
+            rectangle.setFillColor(sf::Color(164, 36, 59, 255));
         }
         else
         {
-            rectangle.setFillColor(sf::Color(66, 0, 57, 255));
+            rectangle.setFillColor(sf::Color(51, 80, 92, 255));
         }
         // rectangle.setFillColor(sf::Color::Red);
         rectangle.setPosition(position.x * graphics::SCALE, position.y * graphics::SCALE);
@@ -130,6 +131,11 @@ void Tank::debug_draw(sf::RenderWindow &window)
 
 void Tank::setWeapon(Weapon *weapon)
 {
+    if (weapon_ != nullptr)
+    {
+        delete weapon_;
+        weapon_ = nullptr;
+    }
     weapon_ = weapon;
 }
 
@@ -164,6 +170,11 @@ Tank::~Tank()
     delete weapon_;
     body_->GetWorld()->DestroyBody(body_);
     body_ = nullptr;
+}
+
+float Tank::getSizeX()
+{
+    return sizeX_;
 }
 
 float Tank::getSizeY()

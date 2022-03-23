@@ -23,6 +23,9 @@ private:
 
     // all about graphics
 
+    const float sizeGunX_ = 1;
+    const float sizeGunY_ = 1.5;
+
 public:
     WeaponMine(Tank *tank, int id);
 

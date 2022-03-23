@@ -17,11 +17,17 @@ void ContactListener::BeginContact(b2Contact *contact)
 
     if (dataA->type == "tank" && dataB->type == "bullet")
     {
-        // nice collide
         Tank *tank = reinterpret_cast<Tank *>(dataA->pointer);
         tank->hit();
         Bullet *bullet = reinterpret_cast<Bullet *>(dataB->pointer);
         bullet->die();
+    }
+
+    if (dataA->type == "tank" && dataB->type == "bonus")
+    {
+        Tank *tank = reinterpret_cast<Tank *>(dataA->pointer);
+        Bonus *bonus = reinterpret_cast<Bonus *>(dataB->pointer);
+        bonus->apply(tank);
     }
     // std::cout << "collide " << dataA->type << " " << dataB->type << std::endl;
 }
