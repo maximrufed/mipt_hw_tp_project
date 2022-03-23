@@ -90,7 +90,7 @@ void BasicGame::initRandomMaze()
     {
         std::vector<twoPoints> wallsDiff;
 
-        for (auto e : walls)
+        for (auto e: walls)
         {
             if (dsu_.diff(dsu_.convert(e.x1, e.y1), dsu_.convert(e.x2, e.y2)))
             {
@@ -106,7 +106,7 @@ void BasicGame::initRandomMaze()
     }
 
     // now just delete some additional walls.
-    int nDeleteWalls = std::max(0, (int)(0.1 * walls.size()));
+    int nDeleteWalls = std::max(0, (int) (0.1 * walls.size()));
 
     for (int i = 0; i < nDeleteWalls; i++)
     {
@@ -114,7 +114,7 @@ void BasicGame::initRandomMaze()
         walls.erase(walls.begin() + deleteIndex);
     }
 
-    for (auto e : walls)
+    for (auto e: walls)
     {
         addWallBetweenCells(e.x1, e.y1, e.x2, e.y2);
     }
@@ -135,7 +135,8 @@ void BasicGame::initTanks(int nTanks)
     for (size_t i = 0; i < nTanks; ++i)
     {
         int index = math::getRand() % freeCells.size();
-        Tank *currentTank = new Tank(world_, b2Vec2(wallLength_ * 0.5 + freeCells[index].first * wallLength_, wallLength_ * 0.5 + freeCells[index].second * wallLength_),
+        Tank *currentTank = new Tank(world_, b2Vec2(wallLength_ * 0.5 + freeCells[index].first * wallLength_,
+                                                    wallLength_ * 0.5 + freeCells[index].second * wallLength_),
                                      math::getRand() % 100, nextTankID_++);
         tanks_.push_back(currentTank);
 
@@ -191,17 +192,17 @@ void BasicGame::step(float timeStep)
     world_.Step(timeStep, 8, 8);
 
     // call step for all objects
-    for (auto &tank : tanks_)
+    for (auto &tank: tanks_)
     {
         tank->step(timeStep);
     }
 
-    for (auto &bullet : bullets_)
+    for (auto &bullet: bullets_)
     {
         bullet->step(timeStep);
     }
 
-    for (auto &bonus : bonuses_)
+    for (auto &bonus: bonuses_)
     {
         bonus->step(timeStep);
     }
@@ -257,22 +258,24 @@ void BasicGame::step(float timeStep)
 
 void BasicGame::tank_move(int tankID, float direction)
 {
-    if (tankID < tanks_.size())
-        tanks_[tankID]->move(direction);
+    Tank *tank = findTank(tankID);
+    if (tank != nullptr)
+        tank->move(direction);
 }
 
 void BasicGame::tank_rotate(int tankID, float direction)
 {
-    if (tankID < tanks_.size())
-        tanks_[tankID]->rotate(direction);
+    Tank *tank = findTank(tankID);
+    if (tank != nullptr)
+        tank->rotate(direction);
 }
 
 void BasicGame::tank_fire(int tankID)
 {
-    if (tankID < tanks_.size())
+    Tank *tank = findTank(tankID);
+    if (tank != nullptr)
     {
-        std::vector<Bullet *> bulletsAdd = tanks_[tankID]->fire(world_, nextBulletID_);
-        for (auto e : bulletsAdd)
+        for (auto e: tanks_[tankID]->fire(world_, nextBulletID_))
         {
             bullets_.push_back(e);
         }
@@ -316,8 +319,7 @@ void BasicGame::addWall(float x1, float y1, float x2, float y2)
         y1 -= wallWidth_ * 0.5;
         y2 += wallWidth_ * 0.5;
         walls_.push_back(Wall(world_, b2Vec2(x1, y1), b2Vec2(x2, y2)));
-    }
-    else
+    } else
     {
         // vertical wall
         x1 -= wallWidth_ * 0.5;
@@ -332,8 +334,7 @@ void BasicGame::addWallBetweenCells(int x1, int y1, int x2, int y2)
     {
         // vertical wall
         addWall(x2 * wallLength_, y1 * wallLength_, x2 * wallLength_, (y1 + 1) * wallLength_);
-    }
-    else
+    } else
     {
         // horizontal wall
         addWall(x1 * wallLength_, y2 * wallLength_, (x1 + 1) * wallLength_, y2 * wallLength_);
@@ -345,13 +346,23 @@ int BasicGame::getResult()
     if (tanks_.size() >= 2)
     {
         return 0; // game is still going
-    }
-    else if (tanks_.size() == 0)
+    } else if (tanks_.size() == 0)
     {
         return -1; // toe
-    }
-    else if (tanks_.size() == 1)
+    } else if (tanks_.size() == 1)
     {
         return tanks_[0]->getTankID() + 1; // tank number x wins
     }
+}
+
+Tank *BasicGame::findTank(int tankID)
+{
+    for (int i = 0; i < tanks_.size(); ++i)
+    {
+        if (tanks_[i]->getTankID() == tankID)
+        {
+            return tanks_[i];
+        }
+    }
+    return nullptr;
 }

@@ -17,6 +17,9 @@ int main_loop(sf::RenderWindow &window)
     float want_fps = 60;
     sf::Clock loop_timer;
 
+    int gameState = 0;
+    sf::Clock timerEnd;
+
     while (window.isOpen())
     {
         sf::Event event;
@@ -24,25 +27,26 @@ int main_loop(sf::RenderWindow &window)
         {
             switch (event.type)
             {
-                // window closed
-                case sf::Event::Closed:
-                    window.close();
-                    break;
+            // window closed
+            case sf::Event::Closed:
+                window.close();
+                break;
 
-                    // key pressed
-                case sf::Event::KeyPressed:
-                    if (event.key.code == sf::Keyboard::Space)
-                    {
-                        game.tank_fire(0);
-                    } else if (event.key.code == sf::Keyboard::Q)
-                    {
-                        game.tank_fire(1);
-                    }
-                    break;
+                // key pressed
+            case sf::Event::KeyPressed:
+                if (event.key.code == sf::Keyboard::Space)
+                {
+                    game.tank_fire(0);
+                }
+                else if (event.key.code == sf::Keyboard::Q)
+                {
+                    game.tank_fire(1);
+                }
+                break;
 
-                    // we don't process other types of events
-                default:
-                    break;
+                // we don't process other types of events
+            default:
+                break;
             }
         }
 
@@ -134,12 +138,28 @@ int main_loop(sf::RenderWindow &window)
 
         int res = game.getResult();
 
-        if (res == 1 || res == 2)
+        if (gameState == 1)
         {
-            return res;
-        } else if (res == -1)
+            if (timerEnd.getElapsedTime().asSeconds() >= 4)
+            {
+
+                if (res == 1 || res == 2)
+                {
+                    return res;
+                }
+                else if (res == -1)
+                {
+                    return 0;
+                }
+            }
+        }
+        if (gameState == 0)
         {
-            return 0;
+            if (res != 0)
+            {
+                gameState = 1;
+                timerEnd.restart();
+            }
         }
     }
 
@@ -158,7 +178,8 @@ signed main()
         if (res == 1)
         {
             s1++;
-        } else if (res == 2)
+        }
+        else if (res == 2)
         {
             s2++;
         }

@@ -56,6 +56,8 @@ private:
 
     void bonusStep(float timeStep);
 
+    Tank *findTank(int tankID);
+
 public:
     BasicGame();
 
