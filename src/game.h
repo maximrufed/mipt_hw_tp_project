@@ -58,6 +58,8 @@ private:
 
     Tank *findTank(int tankID);
 
+    void setDefaultWeaponToTank(Tank *tank);
+
 public:
     BasicGame();
 

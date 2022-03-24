@@ -48,6 +48,8 @@ public:
 
     bool isDead();
 
+    bool isWeaponDead();
+
     void setWeapon(Weapon *weapon);
 
     b2Body *getBody();

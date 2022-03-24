@@ -181,3 +181,10 @@ float Tank::getSizeY()
 {
     return sizeY_;
 }
+
+bool Tank::isWeaponDead()
+{
+    if (weapon_ == nullptr)
+        return true;
+    return weapon_->isDead();
+}

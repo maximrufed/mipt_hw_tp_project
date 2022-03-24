@@ -31,7 +31,7 @@ BulletMine::BulletMine(b2World &world, float size, b2Vec2 position, float angleR
 
     body_->SetTransform(position, angleRad);
 
-    ClassData *tankData = new ClassData("bulletMine", this);
+    ClassData *tankData = new ClassData("bullet", this);
     body_->GetUserData().pointer = reinterpret_cast<uintptr_t>(tankData);
 }
 
@@ -57,8 +57,8 @@ bool BulletMine::isDead()
 
 void BulletMine::debug_draw(sf::RenderWindow &window)
 {
-    if (state_ == 1)
-        return;
+    // if (state_ == 1)
+    // return;
     b2Vec2 position = body_->GetPosition();
     float rotation = body_->GetAngle();
 
