@@ -10,26 +10,27 @@
 #include "tank.h"
 #include "constants.h"
 
-class WeaponBullet : public Weapon
+class WeaponBuckshot : public Weapon
 {
 private:
     // physics
     b2Fixture *fixture_ = nullptr;
     Tank *tank_ = nullptr;
 
-    const float bulletRadius_ = 0.5;
-    const float bulletLiveTime_ = 15;
-    const float bulletVelocity_ = 18;
+    const float bulletRadius_ = 0.3;
+    const float bulletLiveTime_ = 2;
+    const float bulletVelocity_ = 50;
+    const float bulletAmount_ = 3;
 
-    int nBulletsLeft_ = 5;
+    int nBulletsLeft_ = 3;
 
     // all about graphics
 
-    float sizeGunX_ = 0.8;
-    float sizeGunY_ = 3.2;
+    float sizeGunX_ = 1.5;
+    float sizeGunY_ = 3.0;
 
 public:
-    WeaponBullet(b2World &world, Tank *tank, int id);
+    WeaponBuckshot(b2World &world, Tank *tank, int id);
 
     std::vector<Bullet *> fire(b2World &world, int &nextBulletID) override;
 
@@ -43,5 +44,5 @@ public:
 
     b2Fixture *getFixture();
 
-    ~WeaponBullet();
+    ~WeaponBuckshot();
 };

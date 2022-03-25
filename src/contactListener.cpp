@@ -17,9 +17,11 @@ void ContactListener::BeginContact(b2Contact *contact)
 
     if (dataA->type == "tank" && dataB->type == "bullet")
     {
-        Tank *tank = reinterpret_cast<Tank *>(dataA->pointer);
+        std::cout << "collide " << dataA->type << " | ptr_tank = " << dataA->pointer << " " << dataB->type << " ptr = "
+                  << dataB->pointer << std::endl;
+        Tank *tank = static_cast<Tank *>(dataA->pointer);
         tank->hit();
-        Bullet *bullet = reinterpret_cast<Bullet *>(dataB->pointer);
+        Bullet *bullet = static_cast<Bullet *>(dataB->pointer);
         bullet->die();
     }
 
@@ -29,7 +31,7 @@ void ContactListener::BeginContact(b2Contact *contact)
         Bonus *bonus = reinterpret_cast<Bonus *>(dataB->pointer);
         bonus->apply(tank);
     }
-    // std::cout << "collide " << dataA->type << " " << dataB->type << std::endl;
+//    std::cout << "collide " << dataA->type << " " << dataB->type << std::endl;
 }
 
 void ContactListener::EndContact(b2Contact *contact)

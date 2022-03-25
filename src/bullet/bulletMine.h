@@ -35,5 +35,5 @@ public:
 
     void die() override;
 
-    ~BulletMine();
+    ~BulletMine() override;
 };

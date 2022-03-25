@@ -17,6 +17,7 @@
 #include "weapon.h"
 #include "weaponBullet.h"
 #include "weaponMine.h"
+#include "weaponBuckshot.h"
 #include "classData.h"
 #include "contactListener.h"
 #include "constants.h"

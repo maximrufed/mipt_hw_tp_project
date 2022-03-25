@@ -72,5 +72,8 @@ void BulletBasicTimer::die()
 
 BulletBasicTimer::~BulletBasicTimer()
 {
+    delete reinterpret_cast<ClassData *>(body_->GetUserData().pointer);
+    std::cout << "really delete bulletBasicTimer" << std::endl;
     body_->GetWorld()->DestroyBody(body_);
+    body_ = nullptr;
 }

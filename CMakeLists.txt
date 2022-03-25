@@ -16,6 +16,7 @@ set(sources
     src/bullet/bulletMine.cpp
     src/weapon/weapon.cpp
     src/weapon/weaponBullet.cpp
+    src/weapon/weaponBuckshot.cpp
     src/weapon/weaponMine.cpp
     src/bonus/bonus.cpp
     src/bonus/bonusMine.cpp

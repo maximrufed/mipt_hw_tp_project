@@ -5,6 +5,7 @@
 
 #include <iostream>
 
+#include "classData.h"
 #include "bullet.h"
 #include "constants.h"
 
@@ -26,5 +27,5 @@ public:
 
     void die() override;
 
-    ~BulletBasicTimer();
+    ~BulletBasicTimer() override;
 };

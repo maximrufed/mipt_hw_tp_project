@@ -39,4 +39,6 @@ public:
     int getTankID();
 
     int getWeaponID();
+
+    virtual ~Bullet();
 };
