@@ -18,7 +18,7 @@ private:
     Tank *tank_ = nullptr;
 
     const float bulletRadius_ = 0.3;
-    const float bulletLiveTime_ = 2;
+    const float bulletLiveTime_ = 1.5;
     const float bulletVelocity_ = 50;
     const float bulletAmount_ = 3;
 
@@ -30,7 +30,7 @@ private:
     float sizeGunY_ = 3.0;
 
 public:
-    WeaponBuckshot(b2World &world, Tank *tank, int id);
+    WeaponBuckshot(Tank *tank, int id);
 
     std::vector<Bullet *> fire(b2World &world, int &nextBulletID) override;
 

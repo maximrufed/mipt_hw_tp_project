@@ -23,6 +23,7 @@
 #include "constants.h"
 #include "bonus.h"
 #include "bonusMine.h"
+#include "bonusBuckshot.h"
 
 class BasicGame
 {
@@ -33,6 +34,8 @@ private:
     std::vector<Wall> walls_;
     std::vector<Bullet *> bullets_;
     std::vector<Bonus *> bonuses_;
+
+    std::vector<std::string> bonusesNames_ = {"mine", "buckshot"};
 
     int nextTankID_ = 0;
     int nextWeaponID_ = 0;

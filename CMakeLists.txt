@@ -20,6 +20,7 @@ set(sources
     src/weapon/weaponMine.cpp
     src/bonus/bonus.cpp
     src/bonus/bonusMine.cpp
+    src/bonus/bonusBuckshot.cpp
 )
 
 add_executable(main main.cpp ${sources})

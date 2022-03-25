@@ -1,6 +1,6 @@
 #include "weaponBuckshot.h"
 
-WeaponBuckshot::WeaponBuckshot(b2World &world, Tank *tank, int id)
+WeaponBuckshot::WeaponBuckshot(Tank *tank, int id)
 {
     id_ = id;
     tank_ = tank;
@@ -51,6 +51,11 @@ std::vector<Bullet *> WeaponBuckshot::fire(b2World &world, int &nextBulletID)
         result.push_back(bullet);
     }
     nBulletsLeft_--;
+
+    if (nBulletsLeft_ <= 0)
+    {
+        alive_ = false;
+    }
 
     return result;
 }

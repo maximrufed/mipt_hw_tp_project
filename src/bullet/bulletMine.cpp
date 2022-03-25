@@ -57,8 +57,9 @@ bool BulletMine::isDead()
 
 void BulletMine::debug_draw(sf::RenderWindow &window)
 {
-    // if (state_ == 1)
-    // return;
+    if (state_ == 1)
+        return;
+
     b2Vec2 position = body_->GetPosition();
     float rotation = body_->GetAngle();
 

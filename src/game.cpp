@@ -90,7 +90,7 @@ void BasicGame::initRandomMaze()
     {
         std::vector<twoPoints> wallsDiff;
 
-        for (auto e: walls)
+        for (auto e : walls)
         {
             if (dsu_.diff(dsu_.convert(e.x1, e.y1), dsu_.convert(e.x2, e.y2)))
             {
@@ -106,7 +106,7 @@ void BasicGame::initRandomMaze()
     }
 
     // now just delete some additional walls.
-    int nDeleteWalls = std::max(0, (int) (0.1 * walls.size()));
+    int nDeleteWalls = std::max(0, (int)(0.1 * walls.size()));
 
     for (int i = 0; i < nDeleteWalls; i++)
     {
@@ -114,7 +114,7 @@ void BasicGame::initRandomMaze()
         walls.erase(walls.begin() + deleteIndex);
     }
 
-    for (auto e: walls)
+    for (auto e : walls)
     {
         addWallBetweenCells(e.x1, e.y1, e.x2, e.y2);
     }
@@ -135,8 +135,7 @@ void BasicGame::initTanks(int nTanks)
     for (size_t i = 0; i < nTanks; ++i)
     {
         int index = math::getRand() % freeCells.size();
-        Tank *currentTank = new Tank(world_, b2Vec2(wallLength_ * 0.5 + freeCells[index].first * wallLength_,
-                                                    wallLength_ * 0.5 + freeCells[index].second * wallLength_),
+        Tank *currentTank = new Tank(world_, b2Vec2(wallLength_ * 0.5 + freeCells[index].first * wallLength_, wallLength_ * 0.5 + freeCells[index].second * wallLength_),
                                      math::getRand() % 100, nextTankID_++);
 
         setDefaultWeaponToTank(currentTank);
@@ -145,7 +144,6 @@ void BasicGame::initTanks(int nTanks)
 
         tanks_.push_back(currentTank);
         std::cout << "tank " << i << " = " << currentTank << std::endl;
-
     }
 }
 
@@ -178,16 +176,39 @@ void BasicGame::bonusStep(float timeStep)
         // generate random bonus
         b2Vec2 position(wallLength_ * (0.5 + math::getRand() % sizeFieldX_),
                         wallLength_ * (0.5 + math::getRand() % sizeFieldY_));
-        Bonus *bonus = new BonusMine(world_, position, math::getRand() % 100, &nextWeaponID_); // TODO
-        bonuses_.push_back(bonus);
+
+        float rotation = math::getRand() % 100;
+
+        // choose random bonus
+        std::string bonusName = bonusesNames_[rand() % bonusesNames_.size()];
+
+        Bonus *bonus = nullptr;
+
+        if (bonusName == "mine")
+        {
+            bonus = new BonusMine(world_, position, rotation, &nextWeaponID_);
+        }
+        else if (bonusName == "buckshot")
+        {
+            bonus = new BonusBuckshot(world_, position, rotation, &nextWeaponID_);
+        }
+        else
+        {
+            std::cerr << "bonus " << bonusName << " wasn't found" << std::endl;
+        }
+
+        if (bonus != nullptr)
+        {
+            bonuses_.push_back(bonus);
+        }
     }
 }
 
 void BasicGame::setDefaultWeaponToTank(Tank *tank)
 {
     Weapon *weapon = nullptr;
-    weapon = new WeaponBuckshot(world_, tank, nextWeaponID_++);
-//    weapon = new WeaponBullet(world_, tank, nextWeaponID_++);
+    // weapon = new WeaponBuckshot(tank, nextWeaponID_++);
+    weapon = new WeaponBullet(world_, tank, nextWeaponID_++);
     // weapon = new WeaponMine(currentTank, nextWeaponID_++);
     tank->setWeapon(weapon);
     weapon = nullptr;
@@ -197,17 +218,17 @@ void BasicGame::step(float timeStep)
 {
 
     // call step for all objects
-    for (auto &tank: tanks_)
+    for (auto &tank : tanks_)
     {
         tank->step(timeStep);
     }
 
-    for (auto &bullet: bullets_)
+    for (auto &bullet : bullets_)
     {
         bullet->step(timeStep);
     }
 
-    for (auto &bonus: bonuses_)
+    for (auto &bonus : bonuses_)
     {
         bonus->step(timeStep);
     }
@@ -269,10 +290,8 @@ void BasicGame::step(float timeStep)
         }
     }
 
-
     // call step for world
-    world_.Step(timeStep, 1, 1);
-
+    world_.Step(timeStep, 8, 3);
 }
 
 void BasicGame::tank_move(int tankID, float direction)
@@ -294,7 +313,7 @@ void BasicGame::tank_fire(int tankID)
     Tank *tank = findTank(tankID);
     if (tank != nullptr)
     {
-        for (auto e: tanks_[tankID]->fire(world_, nextBulletID_))
+        for (auto e : tanks_[tankID]->fire(world_, nextBulletID_))
         {
             bullets_.push_back(e);
         }
@@ -338,7 +357,8 @@ void BasicGame::addWall(float x1, float y1, float x2, float y2)
         y1 -= wallWidth_ * 0.5;
         y2 += wallWidth_ * 0.5;
         walls_.push_back(Wall(world_, b2Vec2(x1, y1), b2Vec2(x2, y2)));
-    } else
+    }
+    else
     {
         // vertical wall
         x1 -= wallWidth_ * 0.5;
@@ -353,7 +373,8 @@ void BasicGame::addWallBetweenCells(int x1, int y1, int x2, int y2)
     {
         // vertical wall
         addWall(x2 * wallLength_, y1 * wallLength_, x2 * wallLength_, (y1 + 1) * wallLength_);
-    } else
+    }
+    else
     {
         // horizontal wall
         addWall(x1 * wallLength_, y2 * wallLength_, (x1 + 1) * wallLength_, y2 * wallLength_);
@@ -365,10 +386,12 @@ int BasicGame::getResult()
     if (tanks_.size() >= 2)
     {
         return 0; // game is still going
-    } else if (tanks_.size() == 0)
+    }
+    else if (tanks_.size() == 0)
     {
         return -1; // toe
-    } else if (tanks_.size() == 1)
+    }
+    else if (tanks_.size() == 1)
     {
         return tanks_[0]->getTankID() + 1; // tank number x wins
     }
