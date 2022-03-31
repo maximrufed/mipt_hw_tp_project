@@ -1,4 +1,5 @@
 #pragma once
+
 #include <SFML/Graphics.hpp>
 #include "box2d/box2d.h"
 
@@ -9,7 +10,7 @@
 struct ClassData
 {
     std::string type = ""; // tank bullet
-    void *pointer;
+    void *pointer = nullptr;
 
-    ClassData(std::string type, void *pointer) : type(type), pointer(pointer){};
+    ClassData(std::string type, void *pointer) : type(type), pointer(pointer) {};
 };

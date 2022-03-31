@@ -34,3 +34,7 @@ int Bullet::getWeaponID()
 {
     return weaponID_;
 }
+
+Bullet::~Bullet()
+{
+}

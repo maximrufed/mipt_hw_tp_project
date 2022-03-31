@@ -8,15 +8,19 @@ set(sources
     src/game.cpp
     src/tank.cpp
     src/wall.cpp
+    src/classData.cpp
+    src/contactListener.cpp
+    src/constants.cpp
     src/bullet/bullet.cpp
     src/bullet/bulletBasicTimer.cpp
     src/bullet/bulletMine.cpp
     src/weapon/weapon.cpp
     src/weapon/weaponBullet.cpp
+    src/weapon/weaponBuckshot.cpp
     src/weapon/weaponMine.cpp
-    src/classData.cpp
-    src/contactListener.cpp
-    src/constants.cpp
+    src/bonus/bonus.cpp
+    src/bonus/bonusMine.cpp
+    src/bonus/bonusBuckshot.cpp
 )
 
 add_executable(main main.cpp ${sources})
@@ -24,6 +28,7 @@ add_executable(main main.cpp ${sources})
 include_directories(src)
 include_directories(src/weapon)
 include_directories(src/bullet)
+include_directories(src/bonus)
 
 target_include_directories(main PRIVATE src)
 

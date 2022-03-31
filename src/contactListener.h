@@ -6,6 +6,7 @@
 #include "bullet.h"
 #include "classData.h"
 #include "constants.h"
+#include "bonus.h"
 
 #include <iostream>
 

@@ -1,9 +1,11 @@
 #pragma once
+
 #include <SFML/Graphics.hpp>
 #include "box2d/box2d.h"
 
 #include <iostream>
 
+#include "classData.h"
 #include "bullet.h"
 #include "constants.h"
 
@@ -25,5 +27,5 @@ public:
 
     void die() override;
 
-    void destroy(b2World &world) override;
+    ~BulletBasicTimer() override;
 };

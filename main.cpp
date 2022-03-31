@@ -17,6 +17,9 @@ int main_loop(sf::RenderWindow &window)
     float want_fps = 60;
     sf::Clock loop_timer;
 
+    int gameState = 0;
+    sf::Clock timerEnd;
+
     while (window.isOpen())
     {
         sf::Event event;
@@ -29,7 +32,7 @@ int main_loop(sf::RenderWindow &window)
                 window.close();
                 break;
 
-            // key pressed
+                // key pressed
             case sf::Event::KeyPressed:
                 if (event.key.code == sf::Keyboard::Space)
                 {
@@ -41,7 +44,7 @@ int main_loop(sf::RenderWindow &window)
                 }
                 break;
 
-            // we don't process other types of events
+                // we don't process other types of events
             default:
                 break;
             }
@@ -73,11 +76,6 @@ int main_loop(sf::RenderWindow &window)
         {
             game.tank_move(0, 1);
         }
-
-        // if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
-        // {
-        //     game.tank_fire(0);
-        // }
 
         // -----------------------------Second Tank----------------------------------------------
 
@@ -125,7 +123,7 @@ int main_loop(sf::RenderWindow &window)
 
         text.setPosition(750, 650);
         text.setString(std::to_string(s2));
-        text.setColor(sf::Color::Blue);
+        text.setFillColor(sf::Color::Blue);
         window.draw(text);
 
         window.display();
@@ -138,15 +136,30 @@ int main_loop(sf::RenderWindow &window)
         }
         loop_timer.restart();
 
-        int res = game.result();
+        int res = game.getResult();
 
-        if (res == 1 || res == 2)
+        if (gameState == 1)
         {
-            return res;
+            if (timerEnd.getElapsedTime().asSeconds() >= 4)
+            {
+
+                if (res == 1 || res == 2)
+                {
+                    return res;
+                }
+                else if (res == -1)
+                {
+                    return 0;
+                }
+            }
         }
-        else if (res == 3)
+        if (gameState == 0)
         {
-            return 0;
+            if (res != 0)
+            {
+                gameState = 1;
+                timerEnd.restart();
+            }
         }
     }
 

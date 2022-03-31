@@ -1,6 +1,6 @@
-#include "weaponBullet.h"
+#include "weaponBuckshot.h"
 
-WeaponBullet::WeaponBullet(b2World &world, Tank *tank, int id)
+WeaponBuckshot::WeaponBuckshot(Tank *tank, int id)
 {
     id_ = id;
     tank_ = tank;
@@ -26,7 +26,7 @@ WeaponBullet::WeaponBullet(b2World &world, Tank *tank, int id)
     // body_->GetUserData().pointer = reinterpret_cast<uintptr_t>(tankData);
 }
 
-std::vector<Bullet *> WeaponBullet::fire(b2World &world, int &nextBulletID)
+std::vector<Bullet *> WeaponBuckshot::fire(b2World &world, int &nextBulletID)
 {
     if (nBulletsLeft_ <= 0 || tank_ == nullptr)
     {
@@ -35,33 +35,36 @@ std::vector<Bullet *> WeaponBullet::fire(b2World &world, int &nextBulletID)
 
     std::vector<Bullet *> result;
 
-    float angleRad = tank_->getBody()->GetAngle() - 1.57;
-    b2Vec2 pos = tank_->getBody()->GetPosition();
-    float length = sizeGunY_ + bulletRadius_ + 0.1;
-    pos.x += cos(angleRad) * length;
-    pos.y += sin(angleRad) * length;
+    for (int i = 0; i < bulletAmount_; ++i)
+    {
 
-    Bullet *bullet = new BulletBasicTimer(world, bulletRadius_, bulletLiveTime_, pos, bulletVelocity_, angleRad);
-    bullet->setWeaponID(id_);
-    bullet->setTankID(tank_->getTankID());
-    bullet->setBulletID(nextBulletID++);
-    result.push_back(bullet);
+        float angleRad = tank_->getBody()->GetAngle() - 1.57 + ((math::getRand() % 100) * 1) / 300.f;
+        b2Vec2 pos = tank_->getBody()->GetPosition();
+        float length = sizeGunY_ + bulletRadius_ + 0.2;
+        pos.x += cos(angleRad) * length;
+        pos.y += sin(angleRad) * length;
 
+        Bullet *bullet = new BulletBasicTimer(world, bulletRadius_, bulletLiveTime_, pos, bulletVelocity_, angleRad);
+        bullet->setWeaponID(id_);
+        bullet->setTankID(tank_->getTankID());
+        bullet->setBulletID(nextBulletID++);
+        result.push_back(bullet);
+    }
     nBulletsLeft_--;
+
+    if (nBulletsLeft_ <= 0)
+    {
+        alive_ = false;
+    }
 
     return result;
 }
 
-void WeaponBullet::step(float timeStep)
-{
-}
+void WeaponBuckshot::step(float timeStep) {}
 
-void WeaponBullet::bulletDie()
-{
-    nBulletsLeft_++;
-}
+void WeaponBuckshot::bulletDie() {}
 
-void WeaponBullet::debug_draw(sf::RenderWindow &window)
+void WeaponBuckshot::debug_draw(sf::RenderWindow &window)
 {
     b2Vec2 position = tank_->getBody()->GetPosition();
     float rotation = tank_->getBody()->GetAngle();
@@ -76,19 +79,19 @@ void WeaponBullet::debug_draw(sf::RenderWindow &window)
     }
 }
 
-WeaponBullet::~WeaponBullet()
+WeaponBuckshot::~WeaponBuckshot()
 {
     tank_->getBody()->DestroyFixture(fixture_);
     fixture_ = nullptr;
     tank_ = nullptr;
 }
 
-void WeaponBullet::setTank(Tank *tank)
+void WeaponBuckshot::setTank(Tank *tank)
 {
     tank_ = tank;
 }
 
-b2Fixture *WeaponBullet::getFixture()
+b2Fixture *WeaponBuckshot::getFixture()
 {
     return fixture_;
 }

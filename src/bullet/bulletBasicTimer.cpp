@@ -1,6 +1,7 @@
 #include "bulletBasicTimer.h"
 
-BulletBasicTimer::BulletBasicTimer(b2World &world, float radius, float aliveSeconds, b2Vec2 position, float velocity, float angleRad)
+BulletBasicTimer::BulletBasicTimer(b2World &world, float radius, float aliveSeconds, b2Vec2 position, float velocity,
+                                   float angleRad)
 {
     timer_ = aliveSeconds;
     radius_ = radius;
@@ -35,7 +36,6 @@ BulletBasicTimer::BulletBasicTimer(b2World &world, float radius, float aliveSeco
 
     // apply velocity and angleRad
     body_->SetLinearVelocity(b2Vec2(cos(angleRad) * velocity, sin(angleRad) * velocity));
-    std::cout << "vel = " << velocity << std::endl;
 }
 
 void BulletBasicTimer::step(float timeStep)
@@ -58,10 +58,10 @@ void BulletBasicTimer::debug_draw(sf::RenderWindow &window)
 
     b2Vec2 position = body_->GetPosition();
 
-    sf::CircleShape circle(radius_);
+    sf::CircleShape circle(radius_ * graphics::SCALE);
     circle.setFillColor(sf::Color::Black);
-    circle.setPosition(position.x, position.y);
-    circle.setOrigin(radius_, radius_);
+    circle.setPosition(position.x * graphics::SCALE, position.y * graphics::SCALE);
+    circle.setOrigin(radius_ * graphics::SCALE, radius_ * graphics::SCALE);
     window.draw(circle);
 }
 
@@ -70,7 +70,10 @@ void BulletBasicTimer::die()
     alive_ = false;
 }
 
-void BulletBasicTimer::destroy(b2World &world)
+BulletBasicTimer::~BulletBasicTimer()
 {
-    world.DestroyBody(body_);
+    delete reinterpret_cast<ClassData *>(body_->GetUserData().pointer);
+    std::cout << "really delete bulletBasicTimer" << std::endl;
+    body_->GetWorld()->DestroyBody(body_);
+    body_ = nullptr;
 }

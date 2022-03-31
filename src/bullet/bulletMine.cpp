@@ -9,7 +9,6 @@ BulletMine::BulletMine(b2World &world, float size, b2Vec2 position, float angleR
 
     b2BodyDef bodyDef;
     bodyDef.type = b2_staticBody;
-    bodyDef.position.Set(position.x, position.y);
     bodyDef.bullet = true;
 
     body_ = world.CreateBody(&bodyDef);
@@ -32,7 +31,7 @@ BulletMine::BulletMine(b2World &world, float size, b2Vec2 position, float angleR
 
     body_->SetTransform(position, angleRad);
 
-    ClassData *tankData = new ClassData("bulletMine", this);
+    ClassData *tankData = new ClassData("bullet", this);
     body_->GetUserData().pointer = reinterpret_cast<uintptr_t>(tankData);
 }
 
@@ -60,15 +59,15 @@ void BulletMine::debug_draw(sf::RenderWindow &window)
 {
     if (state_ == 1)
         return;
+
     b2Vec2 position = body_->GetPosition();
     float rotation = body_->GetAngle();
 
-    sf::RectangleShape rectangle(sf::Vector2f(size_, size_));
+    sf::RectangleShape rectangle(sf::Vector2f(size_ * graphics::SCALE, size_ * graphics::SCALE));
     rectangle.setFillColor(sf::Color::Black);
-    rectangle.setPosition(position.x, position.y);
-    const float DEG = 57.2977f;
-    rectangle.rotate(rotation * DEG);
-    rectangle.setOrigin(size_ * 0.5, size_ * 0.5);
+    rectangle.setPosition(position.x * graphics::SCALE, position.y * graphics::SCALE);
+    rectangle.rotate(rotation * graphics::DEG);
+    rectangle.setOrigin(size_ * 0.5 * graphics::SCALE, size_ * 0.5 * graphics::SCALE);
     window.draw(rectangle);
 }
 
@@ -77,7 +76,8 @@ void BulletMine::die()
     alive_ = false;
 }
 
-void BulletMine::destroy(b2World &world)
+BulletMine::~BulletMine()
 {
-    world.DestroyBody(body_);
+    body_->GetWorld()->DestroyBody(body_);
+    body_ = nullptr;
 }

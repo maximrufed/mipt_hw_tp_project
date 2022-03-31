@@ -33,10 +33,9 @@ void Wall::debug_draw(sf::RenderWindow &window)
 {
     b2Vec2 position = body_->GetPosition();
 
-    sf::RectangleShape rectangle(sf::Vector2f(sizeX_, sizeY_));
+    sf::RectangleShape rectangle(sf::Vector2f(sizeX_ * graphics::SCALE, sizeY_ * graphics::SCALE));
     rectangle.setFillColor(sf::Color::Black);
-    rectangle.setPosition(position.x, position.y);
-    const float DEG = 57.2977f;
-    rectangle.setOrigin(sizeX_ * 0.5, sizeY_ * 0.5);
+    rectangle.setPosition(position.x * graphics::SCALE, position.y * graphics::SCALE);
+    rectangle.setOrigin(sizeX_ * graphics::SCALE * 0.5, sizeY_ * graphics::SCALE * 0.5);
     window.draw(rectangle);
 }
