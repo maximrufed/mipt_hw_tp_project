@@ -1,10 +1,10 @@
 #pragma once
 
-#include <SFML/Graphics.hpp>
+#include <SFML/graphics.hpp>
 #include "box2d/box2d.h"
 
 #include "weapon.h"
-#include "bullet.h"
+// #include "bullet.h"
 #include "classData.h"
 #include "constants.h"
 
@@ -21,9 +21,7 @@ class Tank
 private:
     bool alive_ = true;
     int id_ = -1;
-    b2Body *body_ = nullptr;
-    float sizeX_ = 3;
-    float sizeY_ = 4.5;
+    std::shared_ptr<b2Body> body_;
     float linearVelocity_ = 15;
     float angularVelocity_ = 6;
 
@@ -31,7 +29,7 @@ private:
     float currentRotation_ = 0; // 1 or -1
     std::string color_ = "";
 
-    Weapon *weapon_ = nullptr;
+    std::shared_ptr<Weapon> weapon_;
 
 public:
     Tank(b2World &world, b2Vec2 position, float angleRad, int id);
@@ -40,7 +38,7 @@ public:
 
     void rotate(float direction);
 
-    std::vector<Bullet *> fire(b2World &world, int &nextBulletID);
+    std::vector<std::shared_ptr<Bullet>> fire(b2World &world, int &nextBulletID);
 
     void hit();
 
@@ -50,11 +48,11 @@ public:
 
     bool isWeaponDead();
 
-    void setWeapon(Weapon *weapon);
+    void setWeapon(std::shared_ptr<Weapon> weapon);
 
-    b2Body *getBody();
+    std::shared_ptr<b2Body> getBody();
 
-    int getTankID();
+    int getTankID() const;
 
     void setTankID(int id);
 
@@ -62,13 +60,9 @@ public:
 
     ~Tank();
 
-    // TODO useless
-    void setColor(std::string color);
+    float getRotation() const;
+    
+    b2Vec2 getPosition() const;
 
-    // TODO graphics
-    void debug_draw(sf::RenderWindow &window);
-
-    float getSizeX();
-
-    float getSizeY();
+    std::shared_ptr<Weapon> getWeapon() const;
 };

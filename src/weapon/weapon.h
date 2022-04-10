@@ -1,11 +1,10 @@
 #pragma once
-#include <SFML/Graphics.hpp>
 #include "box2d/box2d.h"
 
 #include <iostream>
 #include <vector>
-
-#include "bullet.h"
+#include <memory>
+// #include "bullet.h"
 #include "tank.h"
 #include "constants.h"
 
@@ -19,7 +18,7 @@ protected:
     int id_ = -1;
 
 public:
-    virtual std::vector<Bullet *> fire(b2World &world, int &nextBulletID) = 0;
+    virtual std::vector<std::shared_ptr<Bullet>> fire(b2World &world, int &nextBulletID) = 0;
 
     virtual bool isDead();
 
@@ -29,8 +28,6 @@ public:
     void setID(int id);
 
     virtual void bulletDie() = 0;
-
-    virtual void debug_draw(sf::RenderWindow &window) = 0;
 
     virtual ~Weapon();
 };

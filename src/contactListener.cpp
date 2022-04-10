@@ -29,7 +29,7 @@ void ContactListener::BeginContact(b2Contact *contact)
     {
         Tank *tank = reinterpret_cast<Tank *>(dataA->pointer);
         Bonus *bonus = reinterpret_cast<Bonus *>(dataB->pointer);
-        bonus->apply(tank);
+        bonus->apply(std::shared_ptr<Tank>(tank));
     }
 //    std::cout << "collide " << dataA->type << " " << dataB->type << std::endl;
 }

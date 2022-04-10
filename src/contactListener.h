@@ -9,6 +9,7 @@
 #include "bonus.h"
 
 #include <iostream>
+#include <memory>
 
 class ContactListener : public b2ContactListener
 {

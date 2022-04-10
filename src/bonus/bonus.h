@@ -1,9 +1,9 @@
 #pragma once
 
-#include <SFML/Graphics.hpp>
 #include "box2d/box2d.h"
 
 #include <string>
+#include <memory>
 
 #include "constants.h"
 #include "tank.h"
@@ -17,9 +17,11 @@ public:
 
     virtual bool isDead();
 
-    virtual void apply(Tank *tank) = 0;
+    virtual void apply(std::shared_ptr<Tank> tank) = 0;
 
-    virtual void debug_draw(sf::RenderWindow &window) = 0;
+    virtual b2Vec2 getPosition() const = 0;
+
+    virtual float getRotation() const = 0;
 
     virtual ~Bonus();
 };

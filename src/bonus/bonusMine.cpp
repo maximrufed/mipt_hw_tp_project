@@ -6,10 +6,10 @@ BonusMine::BonusMine(b2World &world, b2Vec2 position, float angleRad, int *nextW
     bodyDef.type = b2_dynamicBody;
     bodyDef.bullet = true;
 
-    body_ = world.CreateBody(&bodyDef);
+    body_ = std::shared_ptr<b2Body>(world.CreateBody(&bodyDef), [](b2Body*){});
 
     b2PolygonShape dynamicBox;
-    dynamicBox.SetAsBox(size_ * 0.5, size_ * 0.5);
+    dynamicBox.SetAsBox(graphics::bonusSize * 0.5, graphics::bonusSize * 0.5);
 
     b2FixtureDef fixtureBody;
     fixtureBody.shape = &dynamicBox;
@@ -28,53 +28,29 @@ BonusMine::BonusMine(b2World &world, b2Vec2 position, float angleRad, int *nextW
 
 void BonusMine::step(float timeStep)
 {
-    if (tank_ != nullptr)
+    if (tank_)
     {
-        Weapon *weapon = new WeaponMine(tank_, (*nextWeaponID_)++);
+        std::shared_ptr<Weapon> weapon = std::make_shared<WeaponMine>(tank_, (*nextWeaponID_)++);
         tank_->setWeapon(weapon);
-        tank_ = nullptr;
+        tank_.reset();
         alive_ = false;
     }
 }
 
-void BonusMine::apply(Tank *tank)
+void BonusMine::apply(std::shared_ptr<Tank> tank)
 {
     tank_ = tank;
 }
 
-void BonusMine::debug_draw(sf::RenderWindow &window)
-{
-    b2Vec2 position = body_->GetPosition();
-    float rotation = body_->GetAngle();
+b2Vec2 BonusMine::getPosition() const {
+    return body_->GetPosition();
+}
 
-    // sf::RectangleShape rectangle(sf::Vector2f(size_ * graphics::SCALE, size_ * graphics::SCALE));
-    // rectangle.setFillColor(sf::Color::Magenta);
-    // // rectangle.setFillColor(sf::Color::Red);
-    // rectangle.setPosition(position.x * graphics::SCALE, position.y * graphics::SCALE);
-    // rectangle.rotate(rotation * graphics::DEG);
-    // rectangle.setOrigin(size_ * 0.5 * graphics::SCALE, size_ * 0.5 * graphics::SCALE);
-    // window.draw(rectangle);
-
-    sf::Texture texture;
-    texture.loadFromFile("../data/mine.png");
-    texture.setSmooth(true);
-
-    sf::Sprite sprite(texture);
-
-    float spriteX = sprite.getTextureRect().width;
-
-    float spriteY = sprite.getTextureRect().height;
-
-    sprite.setScale((size_ * graphics::SCALE) / spriteX, (size_ * graphics::SCALE) / spriteY);
-    sprite.setPosition(position.x * graphics::SCALE, position.y * graphics::SCALE);
-    sprite.setRotation(rotation * graphics::DEG);
-    sprite.setOrigin(spriteX * 0.5, spriteY * 0.5);
-
-    window.draw(sprite);
+float BonusMine::getRotation() const {
+    return body_->GetAngle();
 }
 
 BonusMine::~BonusMine()
 {
-    body_->GetWorld()->DestroyBody(body_);
-    body_ = nullptr;
+    body_->GetWorld()->DestroyBody(body_.get());
 }

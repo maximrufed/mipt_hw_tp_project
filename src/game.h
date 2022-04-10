@@ -2,12 +2,14 @@
 
 #include <SFML/Graphics.hpp>
 #include "box2d/box2d.h"
+#include "graphics.h"
 
 #include <iostream>
 #include <vector>
 #include <string>
 #include <random>
 #include <set>
+#include <memory>
 
 #include "tank.h"
 #include "bullet.h"
@@ -25,15 +27,18 @@
 #include "bonusMine.h"
 #include "bonusBuckshot.h"
 
+class Graphics;
+
 class BasicGame
 {
 private:
+    std::shared_ptr<Graphics> graphics_;
     b2Vec2 gravity_;
     b2World world_;
-    std::vector<Tank *> tanks_;
+    std::vector<std::shared_ptr<Tank>> tanks_;
     std::vector<Wall> walls_;
-    std::vector<Bullet *> bullets_;
-    std::vector<Bonus *> bonuses_;
+    std::vector<std::shared_ptr<Bullet>> bullets_;
+    std::vector<std::shared_ptr<Bonus>> bonuses_;
 
     std::vector<std::string> bonusesNames_ = {"mine", "buckshot"};
 
@@ -42,11 +47,6 @@ private:
     int nextBulletID_ = 0;
 
     float nextBonusTimer_ = 0;
-
-    int sizeFieldX_ = 8;
-    int sizeFieldY_ = 6;
-    float wallLength_ = 10;
-    const float wallWidth_ = 0.2;
 
     void addWallBetweenCells(int x1, int y1, int x2, int y2);
 
@@ -60,12 +60,12 @@ private:
 
     void bonusStep(float timeStep);
 
-    Tank *findTank(int tankID);
+    std::shared_ptr<Tank> findTank(int tankID);
 
-    void setDefaultWeaponToTank(Tank *tank);
+    void setDefaultWeaponToTank(std::shared_ptr<Tank> tank);
 
 public:
-    BasicGame();
+    BasicGame(std::shared_ptr<Graphics> graphics);
 
     void start(int nTanks);
 
@@ -77,7 +77,7 @@ public:
 
     void tank_fire(int tankID);
 
-    void debug_draw(sf::RenderWindow &window);
+    void draw();
 
     int getResult();
 };
