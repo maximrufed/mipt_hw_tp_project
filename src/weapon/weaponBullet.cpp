@@ -20,7 +20,7 @@ WeaponBullet::WeaponBullet(b2World &world, std::shared_ptr<Tank> tank, int id)
 
     auto bodyTank = tank->getBody();
 
-    fixture_ = bodyTank->CreateFixture(&fixtureDef);
+    fixture_ = std::shared_ptr<b2Fixture>(bodyTank->CreateFixture(&fixtureDef), [](b2Fixture*){});
 
     // ClassData *tankData = new ClassData("tank", this);
     // body_->GetUserData().pointer = reinterpret_cast<uintptr_t>(tankData);
@@ -61,8 +61,7 @@ void WeaponBullet::bulletDie() {
 
 WeaponBullet::~WeaponBullet()
 {
-    tank_->getBody()->DestroyFixture(fixture_);
-    fixture_ = nullptr;
+    tank_->getBody()->DestroyFixture(fixture_.get());
 }
 
 void WeaponBullet::setTank(std::shared_ptr<Tank> tank)
@@ -70,7 +69,7 @@ void WeaponBullet::setTank(std::shared_ptr<Tank> tank)
     tank_ = tank;
 }
 
-b2Fixture* WeaponBullet::getFixture()
+std::shared_ptr<b2Fixture> WeaponBullet::getFixture()
 {
     return fixture_;
 }

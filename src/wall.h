@@ -10,13 +10,17 @@
 class Wall
 {
 private:
-    b2Body* body_ = nullptr;
+    std::shared_ptr<b2Body> body_;
 
     float sizeX_ = 0;
     float sizeY_ = 0;
 
    public:
     Wall(b2World& world, b2Vec2 p1, b2Vec2 p2);
+
+    float getSizeX() const;
+
+    float getSizeY() const;
 
     float getSizeX() const;
 

@@ -10,7 +10,7 @@ Wall::Wall(b2World& world, b2Vec2 p1, b2Vec2 p2) {
     bodyDef.type = b2_staticBody;
     bodyDef.position.Set((p1.x + p2.x) * 0.5, (p1.y + p2.y) * 0.5);
     bodyDef.bullet = true;
-    body_ = world.CreateBody(&bodyDef);
+    body_ = std::shared_ptr<b2Body>(world.CreateBody(&bodyDef), [](b2Body*){});
 
     // init fixture
     b2PolygonShape staticBox;

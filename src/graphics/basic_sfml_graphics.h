@@ -26,7 +26,7 @@ public:
 
 class BasicSfmlGraphics : public Graphics {
 public:
-    static constexpr float SCALE = 15;
+    static constexpr float SCALE = 20;
     static constexpr float DEG = 180.0 / std::numbers::pi_v<float>;
     static constexpr float TANK_DIFF_FROM_CENTER = 21.f / 250.f;
 

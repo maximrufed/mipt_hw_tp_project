@@ -5,7 +5,7 @@ BonusMine::BonusMine(b2World& world, b2Vec2 position, float angleRad, int* nextW
     bodyDef.type = b2_dynamicBody;
     bodyDef.bullet = true;
 
-    body_ = world.CreateBody(&bodyDef);
+    body_ = std::shared_ptr<b2Body>(world.CreateBody(&bodyDef), [](b2Body*){});
 
     b2PolygonShape dynamicBox;
     dynamicBox.SetAsBox(graphics::bonusSize * 0.5, graphics::bonusSize * 0.5);
@@ -54,6 +54,5 @@ float BonusMine::getRotation() const {
 
 BonusMine::~BonusMine()
 {
-    body_->GetWorld()->DestroyBody(body_);
-    body_ = nullptr;
+    body_->GetWorld()->DestroyBody(body_.get());
 }

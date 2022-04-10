@@ -123,9 +123,7 @@ void BasicGame::initTanks(int nTanks) {
     // init tanks
     for (size_t i = 0; i < nTanks; ++i) {
         int index = math::getRand() % freeCells.size();
-        auto currentTank = std::make_shared<Tank>(
-            world_, b2Vec2(graphics::wallLength * 0.5 + freeCells[index].first * 
-                            graphics::wallLength, graphics::wallLength * 0.5 + freeCells[index].second * graphics::wallLength),
+        auto currentTank = std::make_shared<Tank>(world_, b2Vec2(graphics::wallLength * 0.5 + freeCells[index].first * graphics::wallLength, graphics::wallLength * 0.5 + freeCells[index].second * graphics::wallLength),
                                      math::getRand() % 100, nextTankID_++);
 
         setDefaultWeaponToTank(currentTank);
@@ -189,8 +187,9 @@ void BasicGame::bonusStep(float timeStep) {
 
 void BasicGame::setDefaultWeaponToTank(std::shared_ptr<Tank> tank)
 {
+    std::shared_ptr<Weapon> weapon;
     // weapon = new WeaponBuckshot(tank, nextWeaponID_++);
-    auto weapon = std::make_shared<WeaponBullet>(world_, tank, nextWeaponID_++);
+    weapon = std::make_shared<WeaponBullet>(world_, tank, nextWeaponID_++);
     // weapon = new WeaponMine(currentTank, nextWeaponID_++);
     tank->setWeapon(weapon);
 }
@@ -308,7 +307,7 @@ void BasicGame::draw()
     }
     for (size_t i = 0; i < walls_.size(); ++i)
     {
-        graphics_->draw(std::shared_ptr<Wall>(std::shared_ptr<Wall>(), &walls_[i]));
+        graphics_->draw(std::shared_ptr<Wall>(&walls_[i], [](Wall*){}));
     }
     for (size_t i = 0; i < bullets_.size(); ++i)
     {

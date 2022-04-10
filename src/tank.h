@@ -17,7 +17,7 @@ class Tank {
    private:
     bool alive_ = true;
     int id_ = -1;
-    b2Body* body_ = nullptr;
+    std::shared_ptr<b2Body> body_;
     float linearVelocity_ = 15;
     float angularVelocity_ = 6;
 
@@ -46,7 +46,7 @@ class Tank {
 
     void setWeapon(std::shared_ptr<Weapon> weapon);
 
-    b2Body* getBody();
+    std::shared_ptr<b2Body> getBody();
 
     int getTankID() const;
 

@@ -9,7 +9,7 @@ Tank::Tank(b2World &world, b2Vec2 position, float angleRad, int id)
     b2BodyDef bodyDef;
     bodyDef.type = b2_dynamicBody;
     bodyDef.bullet = true;
-    body_ = world.CreateBody(&bodyDef);
+    body_ = std::shared_ptr<b2Body>(world.CreateBody(&bodyDef), [](b2Body*){});
     b2PolygonShape dynamicBox;
     b2Vec2 center(0, 0);
     dynamicBox.SetAsBox(graphics::tankSizeX * 0.5, graphics::tankSizeY * 0.5, center, 0);
@@ -40,7 +40,7 @@ void Tank::rotate(float direction) {
 std::vector<std::shared_ptr<Bullet>> Tank::fire(b2World &world, int &nextBulletID)
 {
     if (weapon_)
-        return std::move(weapon_->fire(world, nextBulletID));
+        return weapon_->fire(world, nextBulletID);
     else
         return {};
 }
@@ -67,7 +67,8 @@ void Tank::step(float timeStep)
     currentRotation_ = 0;
 }
 
-bool Tank::isDead() {
+bool Tank::isDead()
+{
     return !alive_;
 }
 
@@ -84,7 +85,7 @@ void Tank::setWeapon(std::shared_ptr<Weapon> weapon)
     weapon_ = weapon;
 }
 
-b2Body* Tank::getBody()
+std::shared_ptr<b2Body> Tank::getBody()
 {
     return body_;
 }
@@ -110,9 +111,7 @@ void Tank::bulletDie(int weaponID)
 
 Tank::~Tank()
 {
-    weapon_.reset();
-    body_->GetWorld()->DestroyBody(body_);
-    body_ = nullptr;
+    body_->GetWorld()->DestroyBody(body_.get());
 }
 
 bool Tank::isWeaponDead()

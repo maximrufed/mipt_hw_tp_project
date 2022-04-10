@@ -33,7 +33,7 @@ int main_loop(std::shared_ptr<Graphics> graphics, std::shared_ptr<EventManager> 
         // render
         game->draw();
 
-        graphics->setScore(std::vector<int>{s1, s2});
+        graphics->setScore(std::vector<int>(s1, s2));
         
         graphics->display();
 
@@ -45,6 +45,11 @@ int main_loop(std::shared_ptr<Graphics> graphics, std::shared_ptr<EventManager> 
         loop_timer.restart();
 
         int res = game->getResult();
+
+        if (gameState == 1)
+        {
+            if (timerEnd.getElapsedTime().asSeconds() >= 4)
+            {
 
         if (gameState == 1) {
             if (timerEnd.getElapsedTime().asSeconds() >= 4) {
@@ -70,7 +75,7 @@ int main_loop(std::shared_ptr<Graphics> graphics, std::shared_ptr<EventManager> 
 
 signed main()
 {
-    auto window = std::make_shared<sf::RenderWindow>(sf::VideoMode(1900, 1200), "My window");
+    auto window = std::make_shared<sf::RenderWindow>(sf::VideoMode(2500, 1500), "My window");
     auto graphics = std::make_shared<BasicSfmlGraphics>(window);
     auto manager = std::make_shared<SfmlEventManager>(window);
     while (true)

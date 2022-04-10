@@ -12,7 +12,7 @@
 class WeaponBullet : public Weapon {
    private:
     // physics
-    b2Fixture* fixture_ = nullptr;
+    std::shared_ptr<b2Fixture> fixture_;
     std::shared_ptr<Tank> tank_;
 
     const float bulletLiveTime_ = 15;
@@ -33,7 +33,7 @@ public:
 
     void setTank(std::shared_ptr<Tank> tank);
 
-    b2Fixture* getFixture();
+    std::shared_ptr<b2Fixture> getFixture();
 
     ~WeaponBullet();
 };

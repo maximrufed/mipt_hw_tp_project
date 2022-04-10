@@ -31,8 +31,8 @@ Data::Data() {
                                            graphics::weaponMineSizeY * BasicSfmlGraphics::SCALE / 68.f));
     }
 
-    bonus_[0].loadFromFile("../images/PNG/Bonuses/buckshot.png");
-    bonus_[1].loadFromFile("../images/PNG/Bonuses/mine.png");
+    bonus_[0].loadFromFile("../images/PNG/bonuses/buckshot.png");
+    bonus_[1].loadFromFile("../images/PNG/bonuses/mine.png");
 
     bonus[0].setTexture(bonus_[0]);
     bonus[0].setOrigin(sf::Vector2f(50, 50));
@@ -77,11 +77,11 @@ void BasicSfmlGraphics::draw(std::shared_ptr<Tank> tank) {
 
     auto weapon = tank->getWeapon();
     int weaponID = -1;
-    if (dynamic_pointer_cast<WeaponBullet, Weapon>(weapon)) {
+    if (dynamic_cast<const WeaponBullet*>(weapon.get())) {
         weaponID = 0;
-    } else if (dynamic_pointer_cast<WeaponBuckshot, Weapon>(weapon)) {
+    } else if (dynamic_cast<const WeaponBuckshot*>(weapon.get())) {
         weaponID = 1;
-    } else if (dynamic_pointer_cast<WeaponMine, Weapon>(weapon)) {
+    } else if (dynamic_cast<const WeaponMine*>(weapon.get())) {
         weaponID = 2;
     } else {
         throw std::invalid_argument("Not supported type of weapon");
@@ -104,7 +104,7 @@ void BasicSfmlGraphics::draw(std::shared_ptr<Wall> wall) {
 }
 
 void BasicSfmlGraphics::draw(std::shared_ptr<Bullet> _bullet) {
-    if (auto bullet = dynamic_pointer_cast<BulletBasicTimer, Bullet>(_bullet)) {
+    if (auto bullet = dynamic_cast<const BulletBasicTimer*>(_bullet.get())) {
         auto position = bullet->getPosition();
         auto radius = bullet->getRadius();
         sf::CircleShape circle(radius * SCALE);
@@ -112,7 +112,7 @@ void BasicSfmlGraphics::draw(std::shared_ptr<Bullet> _bullet) {
         circle.setPosition(position.x * SCALE, position.y * SCALE);
         circle.setOrigin(radius * SCALE, radius * SCALE);
         window_->draw(circle);
-    } else if (auto bullet = dynamic_pointer_cast<BulletMine, Bullet>(_bullet)) {
+    } else if (auto bullet = dynamic_cast<const BulletMine*>(_bullet.get())) {
         auto position = bullet->getPosition();
         float rotation = bullet->getRotation();
         sf::RectangleShape rectangle(sf::Vector2f(graphics::mineBulletSize * SCALE, graphics::mineBulletSize * SCALE));
@@ -128,9 +128,9 @@ void BasicSfmlGraphics::draw(std::shared_ptr<Bullet> _bullet) {
 
 void BasicSfmlGraphics::draw(std::shared_ptr<Bonus> bonus) {
     int id = -1;
-    if (dynamic_pointer_cast<BonusBuckshot, Bonus>(bonus)) {
+    if (dynamic_cast<const BonusBuckshot*>(bonus.get())) {
         id = 0;
-    } else if (dynamic_pointer_cast<BonusMine, Bonus>(bonus)) {
+    } else if (dynamic_cast<const BonusMine*>(bonus.get())) {
         id = 1;
     }
     sf::Sprite& bonus_sprite = data_.bonus[id];
@@ -144,13 +144,11 @@ void BasicSfmlGraphics::draw(std::shared_ptr<Bonus> bonus) {
 void BasicSfmlGraphics::setScore(std::vector<int> score) {
     size_t n = score.size();
     for (size_t i = 0; i < n; ++i) {
-        sf::Text text(std::to_string(score[i]), data_.font, graphics::textSize * SCALE);
+        sf::Text text(std::to_string(score[i]), data_.font, 5 * SCALE);
         text.setFillColor(data_.tank_colors[i]);
         text.setStyle(sf::Text::Bold);
-        text.setOrigin(sf::Vector2f(graphics::textSize * 0.5 * SCALE, 0));
-        text.setPosition(sf::Vector2f(SCALE * graphics::wallLength * (graphics::sizeFieldX * ((0.5 + static_cast<float>(i)) / n)),
-                         SCALE * graphics::wallLength * (graphics::sizeFieldY + 1)));
-        window_->draw(text);
+        //text.setPosition();
+        //TODO
     }
 }
 

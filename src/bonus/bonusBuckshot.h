@@ -14,10 +14,10 @@
 class BonusBuckshot : public Bonus
 {
 private:
-    b2Body* body_ = nullptr;
+    std::shared_ptr<b2Body> body_;
     std::shared_ptr<Tank> tank_;
 
-    int* nextWeaponID_ = nullptr;
+    int *nextWeaponID_ = nullptr;
 
 public:
     BonusBuckshot(b2World &world, b2Vec2 position, float angleRad, int *nextWeaponID);
