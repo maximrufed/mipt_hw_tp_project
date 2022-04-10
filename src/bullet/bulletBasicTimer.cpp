@@ -12,7 +12,7 @@ BulletBasicTimer::BulletBasicTimer(b2World& world, float radius, float aliveSeco
     bodyDef.type = b2_dynamicBody;
     bodyDef.position.Set(position.x, position.y);
     bodyDef.bullet = true;
-    body_ = world.CreateBody(&bodyDef);
+    body_ = std::shared_ptr<b2Body>(world.CreateBody(&bodyDef), [](b2Body*){});
 
     b2CircleShape shape;
     // b2Vec2 center(0, 0);
@@ -49,23 +49,21 @@ bool BulletBasicTimer::isDead() {
     return false;
 }
 
-void BulletBasicTimer::debug_draw(sf::RenderWindow& window) {
-    b2Vec2 position = body_->GetPosition();
-
-    sf::CircleShape circle(radius_ * graphics::SCALE);
-    circle.setFillColor(sf::Color::Black);
-    circle.setPosition(position.x * graphics::SCALE, position.y * graphics::SCALE);
-    circle.setOrigin(radius_ * graphics::SCALE, radius_ * graphics::SCALE);
-    window.draw(circle);
+void BulletBasicTimer::die()
+{
+    alive_ = false;
 }
 
-void BulletBasicTimer::die() {
-    alive_ = false;
+b2Vec2 BulletBasicTimer::getPosition() const {
+    return body_->GetPosition();
+}
+
+float BulletBasicTimer::getRadius() const {
+    return radius_;
 }
 
 BulletBasicTimer::~BulletBasicTimer() {
     delete reinterpret_cast<ClassData*>(body_->GetUserData().pointer);
     std::cout << "really delete bulletBasicTimer" << std::endl;
-    body_->GetWorld()->DestroyBody(body_);
-    body_ = nullptr;
+    body_->GetWorld()->DestroyBody(body_.get());
 }

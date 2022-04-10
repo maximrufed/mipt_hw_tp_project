@@ -1,6 +1,7 @@
 #pragma once
 
-#include <SFML/Graphics.hpp>
+#include "box2d/box2d.h"
+
 #include <iostream>
 
 #include "box2d/box2d.h"
@@ -8,9 +9,10 @@
 #include "classData.h"
 #include "constants.h"
 
-class BulletBasicTimer : public Bullet {
-   private:
-    b2Body* body_ = nullptr;
+class BulletBasicTimer : public Bullet
+{
+private:
+    std::shared_ptr<b2Body> body_;
     float timer_ = 0;
     float radius_ = 0;
 
@@ -21,9 +23,11 @@ class BulletBasicTimer : public Bullet {
 
     bool isDead() override;
 
-    void debug_draw(sf::RenderWindow& window) override;
-
     void die() override;
+
+    b2Vec2 getPosition() const;
+
+    float getRadius() const;
 
     ~BulletBasicTimer() override;
 };

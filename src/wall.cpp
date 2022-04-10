@@ -10,7 +10,7 @@ Wall::Wall(b2World& world, b2Vec2 p1, b2Vec2 p2) {
     bodyDef.type = b2_staticBody;
     bodyDef.position.Set((p1.x + p2.x) * 0.5, (p1.y + p2.y) * 0.5);
     bodyDef.bullet = true;
-    body_ = world.CreateBody(&bodyDef);
+    body_ = std::shared_ptr<b2Body>(world.CreateBody(&bodyDef), [](b2Body*){});
 
     // init fixture
     b2PolygonShape staticBox;
@@ -28,12 +28,14 @@ Wall::Wall(b2World& world, b2Vec2 p1, b2Vec2 p2) {
     body_->CreateFixture(&fixtureBody);
 }
 
-void Wall::debug_draw(sf::RenderWindow& window) {
-    b2Vec2 position = body_->GetPosition();
+float Wall::getSizeX() const {
+    return sizeX_;
+}
 
-    sf::RectangleShape rectangle(sf::Vector2f(sizeX_ * graphics::SCALE, sizeY_ * graphics::SCALE));
-    rectangle.setFillColor(sf::Color::Black);
-    rectangle.setPosition(position.x * graphics::SCALE, position.y * graphics::SCALE);
-    rectangle.setOrigin(sizeX_ * graphics::SCALE * 0.5, sizeY_ * graphics::SCALE * 0.5);
-    window.draw(rectangle);
+float Wall::getSizeY() const {
+    return sizeY_;
+}
+
+b2Vec2 Wall::getPosition() const {
+    return body_->GetPosition();
 }

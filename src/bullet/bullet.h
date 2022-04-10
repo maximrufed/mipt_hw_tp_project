@@ -1,8 +1,8 @@
 #pragma once
 
-#include <SFML/Graphics.hpp>
-
 #include "box2d/box2d.h"
+
+#include <memory>
 #include "classData.h"
 #include "constants.h"
 #include "weapon.h"
@@ -12,7 +12,7 @@ class Weapon;
 class Bullet {
    protected:
     bool alive_ = true;
-    Weapon* weapon_ = nullptr;
+    std::shared_ptr<Weapon> weapon_;
 
     int bulletID_ = -1;
     int tankID_ = -1;
@@ -22,8 +22,6 @@ class Bullet {
     virtual void step(float timeStep) = 0;
 
     virtual bool isDead() = 0;
-
-    virtual void debug_draw(sf::RenderWindow& window) = 0;
 
     virtual void die();
 

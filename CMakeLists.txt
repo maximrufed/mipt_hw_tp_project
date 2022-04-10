@@ -21,6 +21,8 @@ set(sources
     src/bonus/bonus.cpp
     src/bonus/bonusMine.cpp
     src/bonus/bonusBuckshot.cpp
+    src/graphics/basic_sfml_graphics.cpp
+    src/graphics/sfml_event_manager.cpp
 )
 
 add_executable(main main.cpp ${sources})
@@ -29,8 +31,9 @@ include_directories(src)
 include_directories(src/weapon)
 include_directories(src/bullet)
 include_directories(src/bonus)
+include_directories(src/graphics)
 
-target_include_directories(main PRIVATE src)
+# target_include_directories(main PRIVATE src)
 
 # link SFML
 target_link_libraries(main sfml-graphics sfml-window sfml-system)
