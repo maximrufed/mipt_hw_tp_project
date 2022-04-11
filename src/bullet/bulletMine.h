@@ -13,7 +13,7 @@ class Bullet;
 class BulletMine : public Bullet
 {
 private:
-    std::shared_ptr<b2Body> body_;
+    b2Body* body_ = nullptr;
     int state_ = 0;
     float timer_ = 0;
     float size_ = 0;

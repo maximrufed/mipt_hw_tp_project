@@ -10,7 +10,7 @@
 class Wall
 {
 private:
-    std::shared_ptr<b2Body> body_;
+    b2Body* body_ = nullptr;
 
     float sizeX_ = 0;
     float sizeY_ = 0;
