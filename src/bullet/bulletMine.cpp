@@ -11,7 +11,7 @@ BulletMine::BulletMine(b2World &world, float size, b2Vec2 position, float angleR
     bodyDef.type = b2_staticBody;
     bodyDef.bullet = true;
 
-    body_ = std::shared_ptr<b2Body>(world.CreateBody(&bodyDef), [](b2Body*){});
+    body_ = world.CreateBody(&bodyDef);
 
     {
         b2PolygonShape dynamicBox;
@@ -71,5 +71,6 @@ float BulletMine::getRotation() const {
 
 BulletMine::~BulletMine()
 {
-    body_->GetWorld()->DestroyBody(body_.get());
+    body_->GetWorld()->DestroyBody(body_);
+    body_ = nullptr;
 }

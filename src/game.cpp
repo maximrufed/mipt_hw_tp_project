@@ -136,7 +136,9 @@ void BasicGame::initTanks(int nTanks)
     for (size_t i = 0; i < nTanks; ++i)
     {
         int index = math::getRand() % freeCells.size();
-        auto currentTank = std::make_shared<Tank>(world_, b2Vec2(graphics::wallLength * 0.5 + freeCells[index].first * graphics::wallLength, graphics::wallLength * 0.5 + freeCells[index].second * graphics::wallLength),
+        auto currentTank = std::make_shared<Tank>(
+            world_, b2Vec2(graphics::wallLength * 0.5 + freeCells[index].first * 
+                            graphics::wallLength, graphics::wallLength * 0.5 + freeCells[index].second * graphics::wallLength),
                                      math::getRand() % 100, nextTankID_++);
 
         setDefaultWeaponToTank(currentTank);
@@ -206,9 +208,8 @@ void BasicGame::bonusStep(float timeStep)
 
 void BasicGame::setDefaultWeaponToTank(std::shared_ptr<Tank> tank)
 {
-    std::shared_ptr<Weapon> weapon;
     // weapon = new WeaponBuckshot(tank, nextWeaponID_++);
-    weapon = std::make_shared<WeaponBullet>(world_, tank, nextWeaponID_++);
+    auto weapon = std::make_shared<WeaponBullet>(world_, tank, nextWeaponID_++);
     // weapon = new WeaponMine(currentTank, nextWeaponID_++);
     tank->setWeapon(weapon);
 }
@@ -309,9 +310,9 @@ void BasicGame::tank_fire(int tankID)
     auto tank = findTank(tankID);
     if (tank)
     {
-        for (auto e : tanks_[tankID]->fire(world_, nextBulletID_))
+        for (auto& e : tank->fire(world_, nextBulletID_))
         {
-            bullets_.push_back(e);
+            bullets_.push_back(std::move(e));
         }
     }
 }
@@ -326,7 +327,7 @@ void BasicGame::draw()
     }
     for (size_t i = 0; i < walls_.size(); ++i)
     {
-        graphics_->draw(std::shared_ptr<Wall>(&walls_[i], [](Wall*){}));
+        graphics_->draw(std::shared_ptr<Wall>(std::shared_ptr<Wall>(), &walls_[i]));
     }
     for (size_t i = 0; i < bullets_.size(); ++i)
     {
@@ -383,7 +384,7 @@ int BasicGame::getResult()
     {
         return -1; // toe
     }
-    else if (tanks_.size() == 1)
+    else
     {
         return tanks_[0]->getTankID() + 1; // tank number x wins
     }

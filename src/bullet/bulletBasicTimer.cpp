@@ -13,7 +13,7 @@ BulletBasicTimer::BulletBasicTimer(b2World &world, float radius, float aliveSeco
     bodyDef.type = b2_dynamicBody;
     bodyDef.position.Set(position.x, position.y);
     bodyDef.bullet = true;
-    body_ = std::shared_ptr<b2Body>(world.CreateBody(&bodyDef), [](b2Body*){});
+    body_ = world.CreateBody(&bodyDef);
 
     b2CircleShape shape;
     // b2Vec2 center(0, 0);
@@ -68,7 +68,8 @@ float BulletBasicTimer::getRadius() const {
 
 BulletBasicTimer::~BulletBasicTimer()
 {
-    delete reinterpret_cast<ClassData *>(body_->GetUserData().pointer);
+    delete reinterpret_cast<ClassData*>(body_->GetUserData().pointer);
     std::cout << "really delete bulletBasicTimer" << std::endl;
-    body_->GetWorld()->DestroyBody(body_.get());
+    body_->GetWorld()->DestroyBody(body_);
+    body_ = nullptr;
 }

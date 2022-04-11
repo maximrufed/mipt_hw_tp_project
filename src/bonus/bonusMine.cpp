@@ -6,7 +6,7 @@ BonusMine::BonusMine(b2World &world, b2Vec2 position, float angleRad, int *nextW
     bodyDef.type = b2_dynamicBody;
     bodyDef.bullet = true;
 
-    body_ = std::shared_ptr<b2Body>(world.CreateBody(&bodyDef), [](b2Body*){});
+    body_ = world.CreateBody(&bodyDef);
 
     b2PolygonShape dynamicBox;
     dynamicBox.SetAsBox(graphics::bonusSize * 0.5, graphics::bonusSize * 0.5);
@@ -39,7 +39,10 @@ void BonusMine::step(float timeStep)
 
 void BonusMine::apply(std::shared_ptr<Tank> tank)
 {
-    tank_ = tank;
+    if (alive_) 
+    {
+        tank_ = tank;
+    }
 }
 
 b2Vec2 BonusMine::getPosition() const {
@@ -52,5 +55,6 @@ float BonusMine::getRotation() const {
 
 BonusMine::~BonusMine()
 {
-    body_->GetWorld()->DestroyBody(body_.get());
+    body_->GetWorld()->DestroyBody(body_);
+    body_ = nullptr;
 }

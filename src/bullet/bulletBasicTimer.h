@@ -11,7 +11,7 @@
 class BulletBasicTimer : public Bullet
 {
 private:
-    std::shared_ptr<b2Body> body_;
+    b2Body* body_ = nullptr;
     float timer_ = 0;
     float radius_ = 0;
 
