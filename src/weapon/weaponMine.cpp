@@ -23,7 +23,7 @@ std::vector<std::shared_ptr<Bullet>> WeaponMine::fire(b2World &world, int &nextB
     bullet->setWeaponID(id_);
     bullet->setTankID(tank_->getTankID());
     bullet->setBulletID(nextBulletID++);
-    result.push_back(bullet);
+    result.push_back(std::move(bullet));
 
     nBulletsLeft_--;
 

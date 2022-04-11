@@ -1,6 +1,7 @@
 #include "contactListener.h"
 
-void ContactListener::BeginContact(b2Contact* contact) { /* handle begin event */
+void ContactListener::BeginContact(b2Contact* contact)
+{ /* handle begin event */
     // std::cerr << " contact " << std::endl;
     const b2Body* bodyA = contact->GetFixtureA()->GetBody();
     const b2Body* bodyB = contact->GetFixtureB()->GetBody();
@@ -25,9 +26,9 @@ void ContactListener::BeginContact(b2Contact* contact) { /* handle begin event *
 
     if (dataA->type == "tank" && dataB->type == "bonus")
     {
-        Tank *tank = reinterpret_cast<Tank *>(dataA->pointer);
-        Bonus *bonus = reinterpret_cast<Bonus *>(dataB->pointer);
-        bonus->apply(std::shared_ptr<Tank>(tank));
+        Tank* tank = reinterpret_cast<Tank*>(dataA->pointer);
+        Bonus* bonus = reinterpret_cast<Bonus*>(dataB->pointer);
+        bonus->apply(std::shared_ptr<Tank>(std::shared_ptr<Tank>(), tank));
     }
     //    std::cout << "collide " << dataA->type << " " << dataB->type << std::endl;
 }
