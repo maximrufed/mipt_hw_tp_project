@@ -1,17 +1,14 @@
 #include "weapon.h"
 
-bool Weapon::isDead()
-{
+bool Weapon::isDead() {
     return !alive_;
 }
 
-int Weapon::getID()
-{
+int Weapon::getID() {
     return id_;
 }
 
-void Weapon::setID(int id)
-{
+void Weapon::setID(int id) {
     id_ = id;
 }
 

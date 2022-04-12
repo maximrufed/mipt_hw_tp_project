@@ -1,8 +1,7 @@
 #include "bulletBasicTimer.h"
 
-BulletBasicTimer::BulletBasicTimer(b2World &world, float radius, float aliveSeconds, b2Vec2 position, float velocity,
-                                   float angleRad)
-{
+BulletBasicTimer::BulletBasicTimer(b2World& world, float radius, float aliveSeconds, b2Vec2 position, float velocity,
+                                   float angleRad) {
     timer_ = aliveSeconds;
     radius_ = radius;
 
@@ -31,31 +30,26 @@ BulletBasicTimer::BulletBasicTimer(b2World &world, float radius, float aliveSeco
 
     body_->CreateFixture(&fixtureBody);
 
-    ClassData *tankData = new ClassData("bullet", this);
+    ClassData* tankData = new ClassData("bullet", this);
     body_->GetUserData().pointer = reinterpret_cast<uintptr_t>(tankData);
 
     // apply velocity and angleRad
     body_->SetLinearVelocity(b2Vec2(cos(angleRad) * velocity, sin(angleRad) * velocity));
 }
 
-void BulletBasicTimer::step(float timeStep)
-{
+void BulletBasicTimer::step(float timeStep) {
     timer_ -= timeStep;
 }
 
-bool BulletBasicTimer::isDead()
-{
-    if ((!alive_) || (timer_ <= 0))
-    {
+bool BulletBasicTimer::isDead() {
+    if ((!alive_) || (timer_ <= 0)) {
         // delete myself
         return true;
     }
     return false;
 }
 
-void BulletBasicTimer::debug_draw(sf::RenderWindow &window)
-{
-
+void BulletBasicTimer::debug_draw(sf::RenderWindow& window) {
     b2Vec2 position = body_->GetPosition();
 
     sf::CircleShape circle(radius_ * graphics::SCALE);
@@ -65,14 +59,12 @@ void BulletBasicTimer::debug_draw(sf::RenderWindow &window)
     window.draw(circle);
 }
 
-void BulletBasicTimer::die()
-{
+void BulletBasicTimer::die() {
     alive_ = false;
 }
 
-BulletBasicTimer::~BulletBasicTimer()
-{
-    delete reinterpret_cast<ClassData *>(body_->GetUserData().pointer);
+BulletBasicTimer::~BulletBasicTimer() {
+    delete reinterpret_cast<ClassData*>(body_->GetUserData().pointer);
     std::cout << "really delete bulletBasicTimer" << std::endl;
     body_->GetWorld()->DestroyBody(body_);
     body_ = nullptr;

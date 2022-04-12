@@ -1,7 +1,6 @@
 #include "bonusMine.h"
 
-BonusMine::BonusMine(b2World &world, b2Vec2 position, float angleRad, int *nextWeaponID) : nextWeaponID_(nextWeaponID)
-{
+BonusMine::BonusMine(b2World& world, b2Vec2 position, float angleRad, int* nextWeaponID) : nextWeaponID_(nextWeaponID) {
     b2BodyDef bodyDef;
     bodyDef.type = b2_dynamicBody;
     bodyDef.bullet = true;
@@ -22,28 +21,24 @@ BonusMine::BonusMine(b2World &world, b2Vec2 position, float angleRad, int *nextW
     body_->CreateFixture(&fixtureBody);
     body_->SetTransform(position, angleRad);
 
-    ClassData *tankData = new ClassData("bonus", this);
+    ClassData* tankData = new ClassData("bonus", this);
     body_->GetUserData().pointer = reinterpret_cast<uintptr_t>(tankData);
 }
 
-void BonusMine::step(float timeStep)
-{
-    if (tank_ != nullptr)
-    {
-        Weapon *weapon = new WeaponMine(tank_, (*nextWeaponID_)++);
+void BonusMine::step(float timeStep) {
+    if (tank_ != nullptr) {
+        Weapon* weapon = new WeaponMine(tank_, (*nextWeaponID_)++);
         tank_->setWeapon(weapon);
         tank_ = nullptr;
         alive_ = false;
     }
 }
 
-void BonusMine::apply(Tank *tank)
-{
+void BonusMine::apply(Tank* tank) {
     tank_ = tank;
 }
 
-void BonusMine::debug_draw(sf::RenderWindow &window)
-{
+void BonusMine::debug_draw(sf::RenderWindow& window) {
     b2Vec2 position = body_->GetPosition();
     float rotation = body_->GetAngle();
 
@@ -73,8 +68,7 @@ void BonusMine::debug_draw(sf::RenderWindow &window)
     window.draw(sprite);
 }
 
-BonusMine::~BonusMine()
-{
+BonusMine::~BonusMine() {
     body_->GetWorld()->DestroyBody(body_);
     body_ = nullptr;
 }

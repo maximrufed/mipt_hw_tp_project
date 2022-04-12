@@ -1,21 +1,19 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
-#include "box2d/box2d.h"
-
 #include <vector>
 
-#include "weapon.h"
+#include "box2d/box2d.h"
 #include "bullet.h"
 #include "bulletMine.h"
-#include "tank.h"
 #include "constants.h"
+#include "tank.h"
+#include "weapon.h"
 
-class WeaponMine : public Weapon
-{
-private:
+class WeaponMine : public Weapon {
+   private:
     // physics
-    Tank *tank_ = nullptr;
+    Tank* tank_ = nullptr;
 
     const float bulletSize_ = 1.5;
 
@@ -26,18 +24,18 @@ private:
     const float sizeGunX_ = 1;
     const float sizeGunY_ = 1.5;
 
-public:
-    WeaponMine(Tank *tank, int id);
+   public:
+    WeaponMine(Tank* tank, int id);
 
-    std::vector<Bullet *> fire(b2World &world, int &nextBulletID) override;
+    std::vector<Bullet*> fire(b2World& world, int& nextBulletID) override;
 
     void step(float timeStep) override;
 
     void bulletDie() override;
 
-    void setTank(Tank *tank);
+    void setTank(Tank* tank);
 
-    void debug_draw(sf::RenderWindow &window) override;
+    void debug_draw(sf::RenderWindow& window) override;
 
     ~WeaponMine();
 };

@@ -1,7 +1,6 @@
 #include "bulletMine.h"
 
-BulletMine::BulletMine(b2World &world, float size, b2Vec2 position, float angleRad)
-{
+BulletMine::BulletMine(b2World& world, float size, b2Vec2 position, float angleRad) {
     // here is creating mine
     size_ = size;
     state_ = 0;
@@ -31,17 +30,14 @@ BulletMine::BulletMine(b2World &world, float size, b2Vec2 position, float angleR
 
     body_->SetTransform(position, angleRad);
 
-    ClassData *tankData = new ClassData("bullet", this);
+    ClassData* tankData = new ClassData("bullet", this);
     body_->GetUserData().pointer = reinterpret_cast<uintptr_t>(tankData);
 }
 
-void BulletMine::step(float timeStep)
-{
-    if (state_ == 0)
-    {
+void BulletMine::step(float timeStep) {
+    if (state_ == 0) {
         timer_ -= timeStep;
-        if (timer_ <= 0)
-        {
+        if (timer_ <= 0) {
             state_ = 1;
             auto filterData = body_->GetFixtureList()[0].GetFilterData();
             filterData.maskBits = 0x0001;
@@ -50,13 +46,11 @@ void BulletMine::step(float timeStep)
     }
 }
 
-bool BulletMine::isDead()
-{
+bool BulletMine::isDead() {
     return !alive_ || (state_ == 2 && timer_ <= 0);
 }
 
-void BulletMine::debug_draw(sf::RenderWindow &window)
-{
+void BulletMine::debug_draw(sf::RenderWindow& window) {
     if (state_ == 1)
         return;
 
@@ -71,13 +65,11 @@ void BulletMine::debug_draw(sf::RenderWindow &window)
     window.draw(rectangle);
 }
 
-void BulletMine::die()
-{
+void BulletMine::die() {
     alive_ = false;
 }
 
-BulletMine::~BulletMine()
-{
+BulletMine::~BulletMine() {
     body_->GetWorld()->DestroyBody(body_);
     body_ = nullptr;
 }

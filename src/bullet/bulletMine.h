@@ -1,19 +1,17 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
-#include "box2d/box2d.h"
-
 #include <iostream>
 
+#include "box2d/box2d.h"
 #include "bullet.h"
 #include "constants.h"
 
 class Bullet;
 
-class BulletMine : public Bullet
-{
-private:
-    b2Body *body_ = nullptr;
+class BulletMine : public Bullet {
+   private:
+    b2Body* body_ = nullptr;
     float size_ = 0;
     int state_ = 0;
     float timer_ = 0;
@@ -24,14 +22,14 @@ private:
     // state = 1 timer = 0
     // collition & tank
 
-public:
-    BulletMine(b2World &world, float size, b2Vec2 position, float angleRad);
+   public:
+    BulletMine(b2World& world, float size, b2Vec2 position, float angleRad);
 
     void step(float timeStep) override;
 
     bool isDead() override;
 
-    void debug_draw(sf::RenderWindow &window) override;
+    void debug_draw(sf::RenderWindow& window) override;
 
     void die() override;
 

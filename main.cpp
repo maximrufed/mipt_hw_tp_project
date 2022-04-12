@@ -1,16 +1,14 @@
-#include <iostream>
-#include "box2d/box2d.h"
-
-#include <SFML/Graphics.hpp>
 #include <unistd.h>
 
+#include <SFML/Graphics.hpp>
+#include <iostream>
+
+#include "box2d/box2d.h"
 #include "src/game.h"
 
 int s1 = 0, s2 = 0;
 
-int main_loop(sf::RenderWindow &window)
-{
-
+int main_loop(sf::RenderWindow& window) {
     BasicGame game = BasicGame();
     game.start(2);
 
@@ -20,82 +18,67 @@ int main_loop(sf::RenderWindow &window)
     int gameState = 0;
     sf::Clock timerEnd;
 
-    while (window.isOpen())
-    {
+    while (window.isOpen()) {
         sf::Event event;
-        while (window.pollEvent(event))
-        {
-            switch (event.type)
-            {
-            // window closed
-            case sf::Event::Closed:
-                window.close();
-                break;
+        while (window.pollEvent(event)) {
+            switch (event.type) {
+                // window closed
+                case sf::Event::Closed:
+                    window.close();
+                    break;
 
-                // key pressed
-            case sf::Event::KeyPressed:
-                if (event.key.code == sf::Keyboard::Space)
-                {
-                    game.tank_fire(0);
-                }
-                else if (event.key.code == sf::Keyboard::Q)
-                {
-                    game.tank_fire(1);
-                }
-                break;
+                    // key pressed
+                case sf::Event::KeyPressed:
+                    if (event.key.code == sf::Keyboard::Space) {
+                        game.tank_fire(0);
+                    } else if (event.key.code == sf::Keyboard::Q) {
+                        game.tank_fire(1);
+                    }
+                    break;
 
-                // we don't process other types of events
-            default:
-                break;
+                    // we don't process other types of events
+                default:
+                    break;
             }
         }
 
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
-        {
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
             window.close();
         }
 
         // -----------------------------First Tank----------------------------------------------
 
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
-        {
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
             game.tank_rotate(0, 1);
         }
 
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
-        {
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
             game.tank_rotate(0, -1);
         }
 
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
-        {
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
             game.tank_move(0, -1);
         }
 
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
-        {
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
             game.tank_move(0, 1);
         }
 
         // -----------------------------Second Tank----------------------------------------------
 
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
-        {
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
             game.tank_rotate(1, 1);
         }
 
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
-        {
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
             game.tank_rotate(1, -1);
         }
 
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
-        {
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
             game.tank_move(1, -1);
         }
 
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
-        {
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
             game.tank_move(1, 1);
         }
 
@@ -113,7 +96,7 @@ int main_loop(sf::RenderWindow &window)
         game.debug_draw(window);
 
         // draw scoreboard
-        sf::Font font; //шрифт
+        sf::Font font;  //шрифт
         font.loadFromFile("../data/CyrilicOld.ttf");
         sf::Text text(std::to_string(s1), font, 50);
         text.setPosition(50, 650);
@@ -130,33 +113,24 @@ int main_loop(sf::RenderWindow &window)
 
         sf::Int32 frame_duration = loop_timer.getElapsedTime().asMilliseconds();
         sf::Int32 time_to_sleep = int(1000.f / want_fps) - frame_duration;
-        if (time_to_sleep > 0)
-        {
+        if (time_to_sleep > 0) {
             sf::sleep(sf::milliseconds(time_to_sleep));
         }
         loop_timer.restart();
 
         int res = game.getResult();
 
-        if (gameState == 1)
-        {
-            if (timerEnd.getElapsedTime().asSeconds() >= 4)
-            {
-
-                if (res == 1 || res == 2)
-                {
+        if (gameState == 1) {
+            if (timerEnd.getElapsedTime().asSeconds() >= 4) {
+                if (res == 1 || res == 2) {
                     return res;
-                }
-                else if (res == -1)
-                {
+                } else if (res == -1) {
                     return 0;
                 }
             }
         }
-        if (gameState == 0)
-        {
-            if (res != 0)
-            {
+        if (gameState == 0) {
+            if (res != 0) {
                 gameState = 1;
                 timerEnd.restart();
             }
@@ -168,19 +142,14 @@ int main_loop(sf::RenderWindow &window)
 
 // just test that libraries includes correctly
 
-signed main()
-{
+signed main() {
     sf::RenderWindow window(sf::VideoMode(1200, 1020), "My window");
 
-    while (true)
-    {
+    while (true) {
         int res = main_loop(window);
-        if (res == 1)
-        {
+        if (res == 1) {
             s1++;
-        }
-        else if (res == 2)
-        {
+        } else if (res == 2) {
             s2++;
         }
 

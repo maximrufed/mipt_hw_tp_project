@@ -1,7 +1,6 @@
 #include "wall.h"
 
-Wall::Wall(b2World &world, b2Vec2 p1, b2Vec2 p2)
-{
+Wall::Wall(b2World& world, b2Vec2 p1, b2Vec2 p2) {
     sizeX_ = abs(p1.x - p2.x);
     sizeY_ = abs(p1.y - p2.y);
     // std::cerr << "New Wall " << (p1.x + p2.x) * 0.5 << " " << (p1.y + p2.y) * 0.5 << std::endl;
@@ -29,8 +28,7 @@ Wall::Wall(b2World &world, b2Vec2 p1, b2Vec2 p2)
     body_->CreateFixture(&fixtureBody);
 }
 
-void Wall::debug_draw(sf::RenderWindow &window)
-{
+void Wall::debug_draw(sf::RenderWindow& window) {
     b2Vec2 position = body_->GetPosition();
 
     sf::RectangleShape rectangle(sf::Vector2f(sizeX_ * graphics::SCALE, sizeY_ * graphics::SCALE));

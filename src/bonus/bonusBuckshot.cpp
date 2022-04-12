@@ -1,7 +1,6 @@
 #include "bonusBuckshot.h"
 
-BonusBuckshot::BonusBuckshot(b2World &world, b2Vec2 position, float angleRad, int *nextWeaponID) : nextWeaponID_(nextWeaponID)
-{
+BonusBuckshot::BonusBuckshot(b2World& world, b2Vec2 position, float angleRad, int* nextWeaponID) : nextWeaponID_(nextWeaponID) {
     b2BodyDef bodyDef;
     bodyDef.type = b2_dynamicBody;
     bodyDef.bullet = true;
@@ -22,31 +21,26 @@ BonusBuckshot::BonusBuckshot(b2World &world, b2Vec2 position, float angleRad, in
     body_->CreateFixture(&fixtureBody);
     body_->SetTransform(position, angleRad);
 
-    ClassData *tankData = new ClassData("bonus", this);
+    ClassData* tankData = new ClassData("bonus", this);
     body_->GetUserData().pointer = reinterpret_cast<uintptr_t>(tankData);
 }
 
-void BonusBuckshot::step(float timeStep)
-{
-    if (tank_ != nullptr)
-    {
-        Weapon *weapon = new WeaponBuckshot(tank_, (*nextWeaponID_)++);
+void BonusBuckshot::step(float timeStep) {
+    if (tank_ != nullptr) {
+        Weapon* weapon = new WeaponBuckshot(tank_, (*nextWeaponID_)++);
         tank_->setWeapon(weapon);
         tank_ = nullptr;
         alive_ = false;
     }
 }
 
-void BonusBuckshot::apply(Tank *tank)
-{
-    if (alive_)
-    {
+void BonusBuckshot::apply(Tank* tank) {
+    if (alive_) {
         tank_ = tank;
     }
 }
 
-void BonusBuckshot::debug_draw(sf::RenderWindow &window)
-{
+void BonusBuckshot::debug_draw(sf::RenderWindow& window) {
     b2Vec2 position = body_->GetPosition();
     float rotation = body_->GetAngle();
 
@@ -76,8 +70,7 @@ void BonusBuckshot::debug_draw(sf::RenderWindow &window)
     window.draw(sprite);
 }
 
-BonusBuckshot::~BonusBuckshot()
-{
+BonusBuckshot::~BonusBuckshot() {
     body_->GetWorld()->DestroyBody(body_);
     body_ = nullptr;
 }

@@ -2,8 +2,7 @@
 
 #include <iostream>
 
-Tank::Tank(b2World &world, b2Vec2 position, float angleRad, int id)
-{
+Tank::Tank(b2World& world, b2Vec2 position, float angleRad, int id) {
     id_ = id;
 
     // -------------------------------create tank-----------------------------------------------
@@ -25,40 +24,34 @@ Tank::Tank(b2World &world, b2Vec2 position, float angleRad, int id)
     body_->CreateFixture(&fixtureBody);
     body_->SetTransform(position, angleRad);
 
-    ClassData *tankData = new ClassData("tank", this);
+    ClassData* tankData = new ClassData("tank", this);
     body_->GetUserData().pointer = reinterpret_cast<uintptr_t>(tankData);
 
     // --------------------------------------end-----------------------------------------------
 }
 
-void Tank::move(float direction)
-{
+void Tank::move(float direction) {
     currentMove_ += direction;
 }
 
-void Tank::rotate(float direction)
-{
+void Tank::rotate(float direction) {
     currentRotation_ -= direction;
 }
 
-std::vector<Bullet *> Tank::fire(b2World &world, int &nextBulletID)
-{
+std::vector<Bullet*> Tank::fire(b2World& world, int& nextBulletID) {
     if (weapon_ != nullptr)
         return weapon_->fire(world, nextBulletID);
     else
         return {};
 }
 
-void Tank::hit()
-{
+void Tank::hit() {
     // std::cout << "hit" << std::endl;
     alive_ = false;
 }
 
-void Tank::step(float timeStep)
-{
-    if (weapon_ != nullptr)
-    {
+void Tank::step(float timeStep) {
+    if (weapon_ != nullptr) {
         weapon_->step(timeStep);
     }
 
@@ -71,39 +64,31 @@ void Tank::step(float timeStep)
     currentMove_ = 0;
     currentRotation_ = 0;
 
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter))
-    {
-        if (weapon_ != nullptr)
-        {
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter)) {
+        if (weapon_ != nullptr) {
             delete weapon_;
             weapon_ = nullptr;
         }
     }
 }
 
-void Tank::setColor(std::string color)
-{
+void Tank::setColor(std::string color) {
     color_ = color;
 }
 
-bool Tank::isDead()
-{
+bool Tank::isDead() {
     return !alive_;
 }
 
-void Tank::debug_draw(sf::RenderWindow &window)
-{
+void Tank::debug_draw(sf::RenderWindow& window) {
     b2Vec2 position = body_->GetPosition();
     float rotation = body_->GetAngle();
 
     {
         sf::RectangleShape rectangle(sf::Vector2f(sizeX_ * graphics::SCALE, sizeY_ * graphics::SCALE));
-        if (color_ == "0")
-        {
+        if (color_ == "0") {
             rectangle.setFillColor(sf::Color(164, 36, 59, 255));
-        }
-        else
-        {
+        } else {
             rectangle.setFillColor(sf::Color(51, 80, 92, 255));
         }
         // rectangle.setFillColor(sf::Color::Red);
@@ -114,8 +99,7 @@ void Tank::debug_draw(sf::RenderWindow &window)
     }
 
     // draw weapon
-    if (weapon_ != nullptr)
-    {
+    if (weapon_ != nullptr) {
         weapon_->debug_draw(window);
     }
 
@@ -129,61 +113,50 @@ void Tank::debug_draw(sf::RenderWindow &window)
     // }
 }
 
-void Tank::setWeapon(Weapon *weapon)
-{
-    if (weapon_ != nullptr)
-    {
+void Tank::setWeapon(Weapon* weapon) {
+    if (weapon_ != nullptr) {
         delete weapon_;
         weapon_ = nullptr;
     }
     weapon_ = weapon;
 }
 
-b2Body *Tank::getBody()
-{
+b2Body* Tank::getBody() {
     return body_;
 }
 
-int Tank::getTankID()
-{
+int Tank::getTankID() {
     return id_;
 }
 
-void Tank::setTankID(int id)
-{
+void Tank::setTankID(int id) {
     id_ = id;
 }
 
-void Tank::bulletDie(int weaponID)
-{
+void Tank::bulletDie(int weaponID) {
     if (weapon_ == nullptr)
         return;
 
-    if (weapon_->getID() == weaponID)
-    {
+    if (weapon_->getID() == weaponID) {
         weapon_->bulletDie();
     }
 }
 
-Tank::~Tank()
-{
+Tank::~Tank() {
     delete weapon_;
     body_->GetWorld()->DestroyBody(body_);
     body_ = nullptr;
 }
 
-float Tank::getSizeX()
-{
+float Tank::getSizeX() {
     return sizeX_;
 }
 
-float Tank::getSizeY()
-{
+float Tank::getSizeY() {
     return sizeY_;
 }
 
-bool Tank::isWeaponDead()
-{
+bool Tank::isWeaponDead() {
     if (weapon_ == nullptr)
         return true;
     return weapon_->isDead();

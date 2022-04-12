@@ -1,39 +1,37 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
-#include "box2d/box2d.h"
-
 #include <iostream>
-#include <vector>
-#include <string>
 #include <random>
 #include <set>
+#include <string>
+#include <vector>
 
-#include "tank.h"
+#include "bonus.h"
+#include "bonusBuckshot.h"
+#include "bonusMine.h"
+#include "box2d/box2d.h"
 #include "bullet.h"
 #include "bulletBasicTimer.h"
 #include "bulletMine.h"
+#include "classData.h"
+#include "constants.h"
+#include "contactListener.h"
+#include "tank.h"
 #include "wall.h"
 #include "weapon.h"
+#include "weaponBuckshot.h"
 #include "weaponBullet.h"
 #include "weaponMine.h"
-#include "weaponBuckshot.h"
-#include "classData.h"
-#include "contactListener.h"
-#include "constants.h"
-#include "bonus.h"
-#include "bonusMine.h"
-#include "bonusBuckshot.h"
 
-class BasicGame
-{
-private:
+class BasicGame {
+   private:
     b2Vec2 gravity_;
     b2World world_;
-    std::vector<Tank *> tanks_;
+    std::vector<Tank*> tanks_;
     std::vector<Wall> walls_;
-    std::vector<Bullet *> bullets_;
-    std::vector<Bonus *> bonuses_;
+    std::vector<Bullet*> bullets_;
+    std::vector<Bonus*> bonuses_;
 
     std::vector<std::string> bonusesNames_ = {"mine", "buckshot"};
 
@@ -60,11 +58,19 @@ private:
 
     void bonusStep(float timeStep);
 
-    Tank *findTank(int tankID);
+    void checkDeath();
 
-    void setDefaultWeaponToTank(Tank *tank);
+    void checkDeathTanks();
 
-public:
+    void checkDeathBullets();
+
+    void checkDeathBonuses();
+
+    Tank* findTank(int tankID);
+
+    void setDefaultWeaponToTank(Tank* tank);
+
+   public:
     BasicGame();
 
     void start(int nTanks);
@@ -77,7 +83,7 @@ public:
 
     void tank_fire(int tankID);
 
-    void debug_draw(sf::RenderWindow &window);
+    void debug_draw(sf::RenderWindow& window);
 
     int getResult();
 };
