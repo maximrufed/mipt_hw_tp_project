@@ -31,8 +31,8 @@ Data::Data() {
                                            graphics::weaponMineSizeY * BasicSfmlGraphics::SCALE / 68.f));
     }
 
-    bonus_[0].loadFromFile("../images/PNG/bonuses/buckshot.png");
-    bonus_[1].loadFromFile("../images/PNG/bonuses/mine.png");
+    bonus_[0].loadFromFile("../images/PNG/Bonuses/buckshot.png");
+    bonus_[1].loadFromFile("../images/PNG/Bonuses/mine.png");
 
     bonus[0].setTexture(bonus_[0]);
     bonus[0].setOrigin(sf::Vector2f(50, 50));
