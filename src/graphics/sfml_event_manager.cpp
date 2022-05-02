@@ -8,10 +8,8 @@ void SfmlEventManager::setGame(std::shared_ptr<BasicGame> game) {
 
 void SfmlEventManager::input() {
     sf::Event event;
-    while (window_->pollEvent(event))
-    {
-        switch (event.type)
-        {
+    while (window_->pollEvent(event)) {
+        switch (event.type) {
         // window closed
         case sf::Event::Closed:
             window_->close();
@@ -19,14 +17,14 @@ void SfmlEventManager::input() {
 
             // key pressed
         case sf::Event::KeyPressed:
-            if (event.key.code == sf::Keyboard::Space)
-            {
+            if (event.key.code == sf::Keyboard::Space) {
                 game_->tank_fire(0);
-            }
-            else if (event.key.code == sf::Keyboard::Q)
-            {
+            } else if (event.key.code == sf::Keyboard::Q) {
                 game_->tank_fire(1);
+            } else if (event.key.code == sf::Keyboard::U) {
+                game_->tank_fire(2);
             }
+
             break;
 
             // we don't process other types of events
@@ -82,5 +80,27 @@ void SfmlEventManager::input() {
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
     {
         game_->tank_move(1, 1);
+    }
+
+    // -----------------------------Third Tank----------------------------------------------
+
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::J))
+    {
+        game_->tank_rotate(2, 1);
+    }
+
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::L))
+    {
+        game_->tank_rotate(2, -1);
+    }
+
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::I))
+    {
+        game_->tank_move(2, -1);
+    }
+
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::K))
+    {
+        game_->tank_move(2, 1);
     }
 }
