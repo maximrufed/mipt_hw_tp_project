@@ -9,7 +9,7 @@
 #include "basic_sfml_graphics.h"
 #include "sfml_event_manager.h"
 
-int s1 = 0, s2 = 0;
+int s[4];
 
 int main_loop(std::shared_ptr<Graphics> graphics, std::shared_ptr<EventManager> manager)
 {
@@ -33,7 +33,7 @@ int main_loop(std::shared_ptr<Graphics> graphics, std::shared_ptr<EventManager> 
         // render
         game->draw();
 
-        graphics->setScore(std::vector<int>{s1, s2});
+        graphics->setScore(std::vector<int>{s[0], s[1]});
         
         graphics->display();
 
@@ -81,11 +81,8 @@ signed main()
     while (true)
     {
         int res = main_loop(graphics, manager);
-        if (res == 1)
-        {
-            s1++;
-        } else if (res == 2) {
-            s2++;
+        if (res != 0) {
+            s[res - 1]++;
         }
 
         if (!graphics->isOpen())
