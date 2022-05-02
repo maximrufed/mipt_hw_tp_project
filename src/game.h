@@ -81,15 +81,3 @@ public:
 
     int getResult();
 };
-
-/*
-
-Tank.filter.categoryBits = 0x0001
-Bullet.filter.categoryBits = 0x0002
-Wall.filter.categoryBits = 0x0004
-
-Tank.filter.maskBits = 0xFFFF
-Bullet.filter.maskBits = 0x0005
-Wall.filter.maskBits = 0xFFFF
-
-*/
