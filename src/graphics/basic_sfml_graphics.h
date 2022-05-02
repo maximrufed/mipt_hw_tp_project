@@ -32,12 +32,16 @@ public:
 
 private:
     std::shared_ptr<sf::RenderWindow> window_;
-    Data data_;
+    std::shared_ptr<Data> data_;
+
+    bool mouseInCircle(const sf::Vector2f& position, float radius);
     
 public:
     BasicSfmlGraphics(std::shared_ptr<sf::RenderWindow>);
 
     bool isOpen() const override;
+
+    int menu(int maxNumber) override;
 
     void clear() override;
 

@@ -10,6 +10,8 @@ class Graphics {
 public:
     virtual bool isOpen() const = 0;
 
+    virtual int menu(int maxNumber) = 0;
+
     virtual void draw(std::shared_ptr<Tank>) = 0;
 
     virtual void draw(std::shared_ptr<Bullet>) = 0;

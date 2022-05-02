@@ -52,10 +52,85 @@ Data::Data() {
     tank_colors[3] = sf::Color(97, 115, 152, 255);
 }
 
-BasicSfmlGraphics::BasicSfmlGraphics(std::shared_ptr<sf::RenderWindow> window): window_(window) {}
+BasicSfmlGraphics::BasicSfmlGraphics(std::shared_ptr<sf::RenderWindow> window)
+    : window_(window)
+    , data_(std::make_shared<Data>()) 
+    {}
 
 bool BasicSfmlGraphics::isOpen() const {
     return window_->isOpen();
+}
+
+bool BasicSfmlGraphics::mouseInCircle(const sf::Vector2f& position, float radius) {
+    auto mousePos = sf::Mouse::getPosition(*window_);
+
+    return hypot(position.x - mousePos.x, position.y - mousePos.y) < radius;
+}
+
+int BasicSfmlGraphics::menu(int maxNumber) {
+    sf::Text heading("Choose the number of players", data_->font, graphics::textSize * SCALE);
+    std::vector<sf::Text> number(maxNumber - 1);
+    for (int i = 2; i <= maxNumber; ++i) {
+        number[i - 2] = sf::Text(std::to_string(i), data_->font, graphics::textSize * SCALE);
+    }
+
+    std::vector<sf::CircleShape> button(maxNumber - 1, sf::CircleShape(graphics::wallLength * 0.5 * SCALE, 200));
+
+    heading.setFillColor(sf::Color::Black);
+    heading.setOrigin(sf::Vector2f(graphics::textSize * 0.5 * SCALE, 0));
+    heading.setPosition(sf::Vector2f(SCALE * graphics::wallLength * (graphics::sizeFieldX / 2. - 3),
+                     SCALE * graphics::wallLength * (graphics::sizeFieldY * 0.5 - 1)));
+    
+    for (int i = 2; i <= maxNumber; ++i) {
+        number[i - 2].setOrigin(sf::Vector2f(0, graphics::textSize * 0.5 * SCALE));
+        number[i - 2].setPosition(sf::Vector2f(SCALE * (graphics::wallLength * (graphics::sizeFieldX / 2. - 1.2 + 2.4 * (i - 2.) / (maxNumber - 2.)) - 1.2),
+                        SCALE * (graphics::wallLength * (graphics::sizeFieldY * 0.5 + 1) - 0.7)));
+        number[i - 2].setFillColor(sf::Color::Black);
+
+        button[i - 2].setOrigin(graphics::wallLength * 0.5 * SCALE, graphics::wallLength * 0.5 * SCALE);
+        button[i - 2].setPosition(sf::Vector2f(SCALE * graphics::wallLength * (graphics::sizeFieldX / 2. - 1.2 + 2.4 * (i - 2.) / (maxNumber - 2.)),
+                        SCALE * graphics::wallLength * (graphics::sizeFieldY * 0.5 + 1)));
+        button[i - 2].setOutlineColor(sf::Color::Black);
+        button[i - 2].setOutlineThickness(3);
+    }
+    int i = 0;
+    while (isOpen()) {
+        sf::Event event;
+		while (window_->pollEvent(event)) {
+			if (event.type == sf::Event::Closed){
+                window_->close();
+                break;
+            }
+		}
+
+        clear();
+
+        for (int i = 2; i <= maxNumber; ++i) {
+            button[i - 2].setFillColor(sf::Color(204, 229, 255, 255));
+        }
+
+        int num = 0;
+
+        for (int i = 2; i <= maxNumber; ++i) {
+            if (mouseInCircle(button[i - 2].getPosition(), button[i - 2].getRadius())) {
+                num = i;
+                button[i - 2].setFillColor(sf::Color(153, 204, 255, 255));
+            }
+        }
+
+        if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && num > 0) {
+            return num;
+        }
+
+        window_->draw(heading);
+        for (int i = 2; i <= maxNumber; ++i) {
+            window_->draw(button[i - 2]);
+            window_->draw(number[i - 2]);
+        }
+        display();
+    }
+
+    return -1;
 }
 
 void BasicSfmlGraphics::clear() {
@@ -68,7 +143,7 @@ void BasicSfmlGraphics::display() {
 
 void BasicSfmlGraphics::draw(std::shared_ptr<Tank> tank) {
     int id = tank->getTankID();
-    sf::Sprite& tank_sprite = data_.tank[id];
+    sf::Sprite& tank_sprite = data_->tank[id];
     auto position = tank->getPosition();
     float rotation = tank->getRotation();
     tank_sprite.setPosition(position.x * SCALE, position.y * SCALE);
@@ -86,7 +161,7 @@ void BasicSfmlGraphics::draw(std::shared_ptr<Tank> tank) {
     } else {
         throw std::invalid_argument("Not supported type of weapon");
     }
-    sf::Sprite& weapon_sprite = data_.weapon[id][weaponID];
+    sf::Sprite& weapon_sprite = data_->weapon[id][weaponID];
     position.x -= sin(rotation) * graphics::tankSizeY * TANK_DIFF_FROM_CENTER;
     position.y += cos(rotation) * graphics::tankSizeY * TANK_DIFF_FROM_CENTER;
     weapon_sprite.setPosition(position.x * SCALE, position.y * SCALE);
@@ -133,7 +208,7 @@ void BasicSfmlGraphics::draw(std::shared_ptr<Bonus> bonus) {
     } else if (dynamic_pointer_cast<BonusMine, Bonus>(bonus)) {
         id = 1;
     }
-    sf::Sprite& bonus_sprite = data_.bonus[id];
+    sf::Sprite& bonus_sprite = data_->bonus[id];
     auto position = bonus->getPosition();
     auto rotation = bonus->getRotation();
     bonus_sprite.setPosition(sf::Vector2f(position.x * SCALE, position.y * SCALE));
@@ -144,8 +219,8 @@ void BasicSfmlGraphics::draw(std::shared_ptr<Bonus> bonus) {
 void BasicSfmlGraphics::setScore(std::vector<int> score) {
     size_t n = score.size();
     for (size_t i = 0; i < n; ++i) {
-        sf::Text text(std::to_string(score[i]), data_.font, graphics::textSize * SCALE);
-        text.setFillColor(data_.tank_colors[i]);
+        sf::Text text(std::to_string(score[i]), data_->font, graphics::textSize * SCALE);
+        text.setFillColor(data_->tank_colors[i]);
         text.setStyle(sf::Text::Bold);
         text.setOrigin(sf::Vector2f(graphics::textSize * 0.5 * SCALE, 0));
         text.setPosition(sf::Vector2f(SCALE * graphics::wallLength * (graphics::sizeFieldX * ((0.5 + static_cast<float>(i)) / n)),
