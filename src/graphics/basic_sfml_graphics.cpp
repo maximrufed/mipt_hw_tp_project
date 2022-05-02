@@ -83,7 +83,7 @@ int BasicSfmlGraphics::menu(int maxNumber) {
     
     for (int i = 2; i <= maxNumber; ++i) {
         number[i - 2].setOrigin(sf::Vector2f(0, graphics::textSize * 0.5 * SCALE));
-        number[i - 2].setPosition(sf::Vector2f(SCALE * (graphics::wallLength * (graphics::sizeFieldX / 2. - 1.2 + 2.4 * (i - 2.) / (maxNumber - 2.)) - 1.2),
+        number[i - 2].setPosition(sf::Vector2f(SCALE * (graphics::wallLength * (graphics::sizeFieldX / 2. - 1.2 + 2.4 * (i - 2.) / (maxNumber - 2.)) - 1.3),
                         SCALE * (graphics::wallLength * (graphics::sizeFieldY * 0.5 + 1) - 0.7)));
         number[i - 2].setFillColor(sf::Color::Black);
 
