@@ -338,8 +338,6 @@ void BasicGame::draw()
     {
         graphics_->draw(bonuses_[i]);
     }
-
-    // graphics_->display();
 }
 
 void BasicGame::addWall(float x1, float y1, float x2, float y2)
@@ -382,7 +380,7 @@ int BasicGame::getResult()
     }
     else if (tanks_.size() == 0)
     {
-        return -1; // toe
+        return -1; // tie
     }
     else
     {
