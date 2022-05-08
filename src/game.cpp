@@ -227,16 +227,19 @@ void BasicGame::step(float timeStep)
             --i;
         }
     }
-}
 
-void BasicGame::checkDeathBullets() {
-    for (int i = 0; i < bullets_.size(); ++i) {
-        if (bullets_[i]->isDead()) {
+    // check for Bullet death
+    for (int i = 0; i < bullets_.size(); ++i)
+    {
+        if (bullets_[i]->isDead())
+        {
             // say tank & weapon that bullet was killed
             int tankID = bullets_[i]->getTankID();
             int weaponID = bullets_[i]->getWeaponID();
-            for (int j = 0; j < tanks_.size(); ++j) {
-                if (tanks_[j]->getTankID() == tankID) {
+            for (int j = 0; j < tanks_.size(); ++j)
+            {
+                if (tanks_[j]->getTankID() == tankID)
+                {
                     tanks_[j]->bulletDie(weaponID);
                     break;
                 }
@@ -247,7 +250,6 @@ void BasicGame::checkDeathBullets() {
             --i;
         }
     }
-}
 
     for (int i = 0; i < bonuses_.size(); ++i)
     {
@@ -257,38 +259,12 @@ void BasicGame::checkDeathBullets() {
             --i;
         }
     }
-}
 
-void BasicGame::checkDeath() {
-    // check for death for all objects
-    checkDeathTanks();
-    checkDeathBullets();
-    checkDeathBonuses();
-}
-
-void BasicGame::step(float timeStep) {
-    // call step for all objects
-    for (auto& tank : tanks_) {
-        tank->step(timeStep);
-    }
-
-    for (auto& bullet : bullets_) {
-        bullet->step(timeStep);
-    }
-
-    for (auto& bonus : bonuses_) {
-        bonus->step(timeStep);
-    }
-
-    // step for bonus factory
-    bonusStep(timeStep);
-
-    checkDeath();
-
-    // set default weapon to tank if necessary
-    for (auto& tank : tanks_) {
-        if (tank->isWeaponDead()) {
-            setDefaultWeaponToTank(tank);
+    for (int i = 0; i < tanks_.size(); ++i)
+    {
+        if (tanks_[i]->isWeaponDead())
+        {
+            setDefaultWeaponToTank(tanks_[i]);
         }
     }
 

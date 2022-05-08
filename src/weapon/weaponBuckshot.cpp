@@ -38,7 +38,6 @@ std::vector<std::shared_ptr<Bullet>> WeaponBuckshot::fire(b2World& world, int& n
     for (int i = 0; i < bulletAmount_; ++i)
     {
 
-    for (int i = 0; i < bulletAmount_; ++i) {
         float angleRad = tank_->getBody()->GetAngle() - 1.57 + ((math::getRand() % 100) * 1) / 300.f;
         b2Vec2 pos = tank_->getBody()->GetPosition();
         float length = graphics::weaponBuckshotSizeY + graphics::buckshotBulletRadius + 0.2;
