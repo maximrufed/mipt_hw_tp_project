@@ -45,8 +45,8 @@ std::vector<std::shared_ptr<Bullet>> Tank::fire(b2World &world, int &nextBulletI
         return {};
 }
 
-void Tank::hit() {
-    // std::cout << "hit" << std::endl;
+void Tank::hit()
+{
     alive_ = false;
 }
 
@@ -67,7 +67,8 @@ void Tank::step(float timeStep)
     currentRotation_ = 0;
 }
 
-bool Tank::isDead() {
+bool Tank::isDead()
+{
     return !alive_;
 }
 

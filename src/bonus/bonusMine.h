@@ -17,7 +17,7 @@ private:
     b2Body* body_ = nullptr;
     std::shared_ptr<Tank> tank_;
 
-    int* nextWeaponID_ = nullptr;
+    int *nextWeaponID_ = nullptr;
 
 public:
     BonusMine(b2World &world, b2Vec2 position, float angleRad, int *nextWeaponID);

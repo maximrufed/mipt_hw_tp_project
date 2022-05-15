@@ -3,28 +3,26 @@
 #include "box2d/box2d.h"
 
 #include <SFML/Graphics.hpp>
-#include <iostream>
+#include <unistd.h>
+#include <filesystem>
 
 #include "game.h"
 #include "basic_sfml_graphics.h"
 #include "sfml_event_manager.h"
 
-int s1 = 0, s2 = 0;
+int s[4];
 
-int main_loop(std::shared_ptr<Graphics> graphics, std::shared_ptr<EventManager> manager)
-{
+int main_loop(std::shared_ptr<Graphics> graphics, std::shared_ptr<EventManager> manager, int nTanks) {
     auto game = std::make_shared<BasicGame>(graphics);
     manager->setGame(game);
-    game->start(2);
+    game->start(nTanks);
     float want_fps = 60;
     sf::Clock loop_timer;
 
     int gameState = 0;
     sf::Clock timerEnd;
 
-    while (graphics->isOpen())
-    {
-
+    while (graphics->isOpen()) {
         manager->input();
 
         // physics step()
@@ -33,7 +31,7 @@ int main_loop(std::shared_ptr<Graphics> graphics, std::shared_ptr<EventManager> 
         // render
         game->draw();
 
-        graphics->setScore(std::vector<int>{s1, s2});
+        graphics->setScore(std::vector<int>(s, s + nTanks));
         
         graphics->display();
 
@@ -48,7 +46,7 @@ int main_loop(std::shared_ptr<Graphics> graphics, std::shared_ptr<EventManager> 
 
         if (gameState == 1) {
             if (timerEnd.getElapsedTime().asSeconds() >= 4) {
-                if (res == 1 || res == 2) {
+                if (res > 0) {
                     return res;
                 } else if (res == -1) {
                     return 0;
@@ -66,21 +64,17 @@ int main_loop(std::shared_ptr<Graphics> graphics, std::shared_ptr<EventManager> 
     return 0;
 }
 
-// just test that libraries includes correctly
-
-signed main()
-{
-    auto window = std::make_shared<sf::RenderWindow>(sf::VideoMode(1900, 1200), "My window");
-    auto graphics = std::make_shared<BasicSfmlGraphics>(window);
+int main(int argc, char** argv) {
+    sf::ContextSettings settings;
+    settings.antialiasingLevel = 8;
+    auto window = std::make_shared<sf::RenderWindow>(sf::VideoMode(1400, 1200), "Tanks in Labyrinth", sf::Style::Default, settings);
+    auto graphics = std::make_shared<BasicSfmlGraphics>(window, std::filesystem::path(argv[0]).parent_path().string());
     auto manager = std::make_shared<SfmlEventManager>(window);
-    while (true)
-    {
-        int res = main_loop(graphics, manager);
-        if (res == 1)
-        {
-            s1++;
-        } else if (res == 2) {
-            s2++;
+    int nTanks = graphics->menu(4);
+    while (true) {
+        int res = main_loop(graphics, manager, nTanks);
+        if (res != 0) {
+            s[res - 1]++;
         }
 
         if (!graphics->isOpen())
