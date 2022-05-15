@@ -4,6 +4,7 @@
 
 #include <SFML/Graphics.hpp>
 #include <unistd.h>
+#include <filesystem>
 
 #include "game.h"
 #include "basic_sfml_graphics.h"
@@ -63,11 +64,11 @@ int main_loop(std::shared_ptr<Graphics> graphics, std::shared_ptr<EventManager> 
     return 0;
 }
 
-int main() {
+int main(int argc, char** argv) {
     sf::ContextSettings settings;
     settings.antialiasingLevel = 8;
     auto window = std::make_shared<sf::RenderWindow>(sf::VideoMode(1400, 1200), "Tanks in Labyrinth", sf::Style::Default, settings);
-    auto graphics = std::make_shared<BasicSfmlGraphics>(window);
+    auto graphics = std::make_shared<BasicSfmlGraphics>(window, std::filesystem::path(argv[0]).parent_path().string());
     auto manager = std::make_shared<SfmlEventManager>(window);
     int nTanks = graphics->menu(4);
     while (true) {

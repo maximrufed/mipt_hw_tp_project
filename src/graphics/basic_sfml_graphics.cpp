@@ -1,8 +1,8 @@
 #include "basic_sfml_graphics.h"
 
-Data::Data() {
+Data::Data(const std::string& exec_dir) {
     for (size_t i = 0; i < 4; ++i) {
-        tank_[i].loadFromFile(std::string("../images/PNG/Hulls_Color_") + 
+        tank_[i].loadFromFile(exec_dir + std::string("/../images/PNG/Hulls_Color_") + 
                 static_cast<char>('A' + i) + "/Hull_06.png", sf::IntRect(50, 3, 156, 250));
         
         tank[i].setTexture(tank_[i]);
@@ -10,9 +10,12 @@ Data::Data() {
         tank[i].setScale(sf::Vector2f(graphics::tankSizeX * BasicSfmlGraphics::SCALE / 156.f, 
                                       graphics::tankSizeY * BasicSfmlGraphics::SCALE / 250.f));
 
-        weapon_[i][0].loadFromFile(std::string("../images/PNG/Weapon_Color_") + static_cast<char>('A' + i) + "/Gun_01.png");
-        weapon_[i][1].loadFromFile(std::string("../images/PNG/Weapon_Color_") + static_cast<char>('A' + i) + "/Gun_07.png");
-        weapon_[i][2].loadFromFile(std::string("../images/PNG/Weapon_Color_") + static_cast<char>('A' + i) + "/Gun_03_B.png");
+        weapon_[i][0].loadFromFile(exec_dir + std::string("/../images/PNG/Weapon_Color_") + 
+                                   static_cast<char>('A' + i) + "/Gun_01.png");
+        weapon_[i][1].loadFromFile(exec_dir + std::string("/../images/PNG/Weapon_Color_") + 
+                                   static_cast<char>('A' + i) + "/Gun_07.png");
+        weapon_[i][2].loadFromFile(exec_dir + std::string("/../images/PNG/Weapon_Color_") + 
+                                   static_cast<char>('A' + i) + "/Gun_03_B.png");
 
         for (size_t j = 0; j < 3; ++j) {
             weapon[i][j].setTexture(weapon_[i][j]);
@@ -31,8 +34,8 @@ Data::Data() {
                                            graphics::weaponMineSizeY * BasicSfmlGraphics::SCALE / 68.f));
     }
 
-    bonus_[0].loadFromFile("../images/PNG/Bonuses/buckshot.png");
-    bonus_[1].loadFromFile("../images/PNG/Bonuses/mine.png");
+    bonus_[0].loadFromFile(exec_dir + "/../images/PNG/Bonuses/buckshot.png");
+    bonus_[1].loadFromFile(exec_dir + "/../images/PNG/Bonuses/mine.png");
 
     bonus[0].setTexture(bonus_[0]);
     bonus[0].setOrigin(sf::Vector2f(50, 50));
@@ -44,7 +47,7 @@ Data::Data() {
     bonus[1].setScale(sf::Vector2f(graphics::bonusSize * BasicSfmlGraphics::SCALE / 64.f,
                                     graphics::bonusSize * BasicSfmlGraphics::SCALE / 64.f));
 
-    font.loadFromFile("../data/CyrilicOld.ttf");
+    font.loadFromFile(exec_dir + "/../data/CyrilicOld.ttf");
 
     tank_colors[0] = sf::Color(124, 91, 79, 255);
     tank_colors[1] = sf::Color(146, 141, 94, 255);
@@ -52,9 +55,9 @@ Data::Data() {
     tank_colors[3] = sf::Color(97, 115, 152, 255);
 }
 
-BasicSfmlGraphics::BasicSfmlGraphics(std::shared_ptr<sf::RenderWindow> window)
+BasicSfmlGraphics::BasicSfmlGraphics(std::shared_ptr<sf::RenderWindow> window, const std::string& exec_dir)
     : window_(window)
-    , data_(std::make_shared<Data>()) 
+    , data_(std::make_shared<Data>(exec_dir)) 
     {}
 
 bool BasicSfmlGraphics::isOpen() const {

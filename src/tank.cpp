@@ -49,7 +49,6 @@ std::vector<std::shared_ptr<Bullet>> Tank::fire(b2World &world, int &nextBulletI
 
 void Tank::hit()
 {
-    // std::cout << "hit" << std::endl;
     alive_ = false;
 }
 

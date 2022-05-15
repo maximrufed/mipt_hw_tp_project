@@ -2,7 +2,6 @@
 
 void ContactListener::BeginContact(b2Contact* contact)
 { /* handle begin event */
-    // std::cerr << " contact " << std::endl;
     const b2Body *bodyA = contact->GetFixtureA()->GetBody();
     const b2Body *bodyB = contact->GetFixtureB()->GetBody();
 
@@ -17,8 +16,6 @@ void ContactListener::BeginContact(b2Contact* contact)
 
     if (dataA->type == "tank" && dataB->type == "bullet")
     {
-        std::cout << "collide " << dataA->type << " | ptr_tank = " << dataA->pointer << " " << dataB->type << " ptr = "
-                  << dataB->pointer << std::endl;
         Tank* tank = static_cast<Tank*>(dataA->pointer);
         tank->hit();
         Bullet* bullet = static_cast<Bullet*>(dataB->pointer);
@@ -31,7 +28,6 @@ void ContactListener::BeginContact(b2Contact* contact)
         Bonus* bonus = reinterpret_cast<Bonus*>(dataB->pointer);
         bonus->apply(std::shared_ptr<Tank>(std::shared_ptr<Tank>(), tank));
     }
-//    std::cout << "collide " << dataA->type << " " << dataB->type << std::endl;
 }
 
 void ContactListener::EndContact(b2Contact *contact)
