@@ -1,9 +1,9 @@
 #pragma once
-#include <SFML/Graphics.hpp>
+#include "box2d/box2d.h"
+
 #include <vector>
 
-#include "box2d/box2d.h"
-#include "bullet.h"
+#include "weapon.h"
 #include "bulletBasicTimer.h"
 #include "constants.h"
 #include "tank.h"
@@ -13,9 +13,8 @@ class WeaponBuckshot : public Weapon {
    private:
     // physics
     b2Fixture* fixture_ = nullptr;
-    Tank* tank_ = nullptr;
+    std::shared_ptr<Tank> tank_;
 
-    const float bulletRadius_ = 0.3;
     const float bulletLiveTime_ = 1.5;
     const float bulletVelocity_ = 50;
     const float bulletAmount_ = 3;
@@ -24,21 +23,16 @@ class WeaponBuckshot : public Weapon {
 
     // all about graphics
 
-    float sizeGunX_ = 1.5;
-    float sizeGunY_ = 3.0;
+public:
+    WeaponBuckshot(std::shared_ptr<Tank> tank, int id);
 
-   public:
-    WeaponBuckshot(Tank* tank, int id);
-
-    std::vector<Bullet*> fire(b2World& world, int& nextBulletID) override;
+    std::vector<std::shared_ptr<Bullet>> fire(b2World &world, int &nextBulletID) override;
 
     void step(float timeStep) override;
 
     void bulletDie() override;
 
-    void debug_draw(sf::RenderWindow& window) override;
-
-    void setTank(Tank* tank);
+    void setTank(std::shared_ptr<Tank>);
 
     b2Fixture* getFixture();
 

@@ -7,7 +7,10 @@
 #include "bullet.h"
 #include "classData.h"
 #include "constants.h"
-#include "tank.h"
+#include "bonus.h"
+
+#include <iostream>
+#include <memory>
 
 class ContactListener : public b2ContactListener {
    public:

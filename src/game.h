@@ -1,11 +1,13 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
+#include "box2d/box2d.h"
+#include "graphics.h"
+
 #include <iostream>
 #include <random>
 #include <set>
-#include <string>
-#include <vector>
+#include <memory>
 
 #include "bonus.h"
 #include "bonusBuckshot.h"
@@ -24,14 +26,18 @@
 #include "weaponBullet.h"
 #include "weaponMine.h"
 
-class BasicGame {
-   private:
+class Graphics;
+
+class BasicGame
+{
+private:
+    std::shared_ptr<Graphics> graphics_;
     b2Vec2 gravity_;
     b2World world_;
-    std::vector<Tank*> tanks_;
+    std::vector<std::shared_ptr<Tank>> tanks_;
     std::vector<Wall> walls_;
-    std::vector<Bullet*> bullets_;
-    std::vector<Bonus*> bonuses_;
+    std::vector<std::shared_ptr<Bullet>> bullets_;
+    std::vector<std::shared_ptr<Bonus>> bonuses_;
 
     std::vector<std::string> bonusesNames_ = {"mine", "buckshot"};
 
@@ -40,11 +46,6 @@ class BasicGame {
     int nextBulletID_ = 0;
 
     float nextBonusTimer_ = 0;
-
-    int sizeFieldX_ = 8;
-    int sizeFieldY_ = 6;
-    float wallLength_ = 10;
-    const float wallWidth_ = 0.2;
 
     void addWallBetweenCells(int x1, int y1, int x2, int y2);
 
@@ -58,20 +59,12 @@ class BasicGame {
 
     void bonusStep(float timeStep);
 
-    void checkDeath();
+    std::shared_ptr<Tank> findTank(int tankID);
 
-    void checkDeathTanks();
+    void setDefaultWeaponToTank(std::shared_ptr<Tank> tank);
 
-    void checkDeathBullets();
-
-    void checkDeathBonuses();
-
-    Tank* findTank(int tankID);
-
-    void setDefaultWeaponToTank(Tank* tank);
-
-   public:
-    BasicGame();
+public:
+    BasicGame(std::shared_ptr<Graphics> graphics);
 
     void start(int nTanks);
 
@@ -83,7 +76,7 @@ class BasicGame {
 
     void tank_fire(int tankID);
 
-    void debug_draw(sf::RenderWindow& window);
+    void draw();
 
     int getResult();
 };

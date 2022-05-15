@@ -12,4 +12,4 @@ void Weapon::setID(int id) {
     id_ = id;
 }
 
-Weapon::~Weapon() {}
+Weapon::~Weapon() = default;

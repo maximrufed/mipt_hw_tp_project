@@ -1,21 +1,24 @@
 #include "game.h"
 
-BasicGame::BasicGame() : gravity_(b2Vec2(0.0f, 0.0f)), world_(gravity_) {
+BasicGame::BasicGame(std::shared_ptr<Graphics> graphics) : graphics_(graphics), gravity_(b2Vec2(0.0f, 0.0f)), world_(gravity_)
+{
 }
 
 void BasicGame::initRandomMaze() {
     // init outside walls
     // horisontal (up & down)
-    for (int x = 0; x < sizeFieldX_; ++x) {
-        // add wall (x * cellSize, 0) -- ((x + 1) * cellSize, sizeFieldY_ * cellSize)
-        addWall(x * wallLength_, 0, (x + 1.f) * wallLength_, 0);
-        addWall(x * wallLength_, sizeFieldY_ * wallLength_, (x + 1.f) * wallLength_, sizeFieldY_ * wallLength_);
+    for (int x = 0; x < graphics::sizeFieldX; ++x)
+    {
+        // add wall (x * cellSize, 0) -- ((x + 1) * cellSize, graphics::sizeFieldY * cellSize)
+        addWall(x * graphics::wallLength, 0, (x + 1.f) * graphics::wallLength, 0);
+        addWall(x * graphics::wallLength, graphics::sizeFieldY * graphics::wallLength, (x + 1.f) * graphics::wallLength, graphics::sizeFieldY * graphics::wallLength);
     }
     // vertical (up & down)
-    for (int y = 0; y < sizeFieldY_; ++y) {
-        // add wall (0, y * cellSize) -- (sizeFieldX_ * cellSize, (y + 1) * cellSize)
-        addWall(0, y * wallLength_, 0, (y + 1.f) * wallLength_);
-        addWall(sizeFieldX_ * wallLength_, y * wallLength_, sizeFieldX_ * wallLength_, (y + 1.f) * wallLength_);
+    for (int y = 0; y < graphics::sizeFieldY; ++y)
+    {
+        // add wall (0, y * cellSize) -- (graphics::sizeFieldX * cellSize, (y + 1) * cellSize)
+        addWall(0, y * graphics::wallLength, 0, (y + 1.f) * graphics::wallLength);
+        addWall(graphics::sizeFieldX * graphics::wallLength, y * graphics::wallLength, graphics::sizeFieldX * graphics::wallLength, (y + 1.f) * graphics::wallLength);
     }
 
     // init inside walls
@@ -52,7 +55,9 @@ void BasicGame::initRandomMaze() {
         };
     };
 
-    struct twoPoints {
+
+    struct twoPoints
+    {
         int x1, y1, x2, y2;
 
         bool operator==(const twoPoints& other) const {
@@ -62,18 +67,21 @@ void BasicGame::initRandomMaze() {
 
     // list of all walls
     std::vector<twoPoints> walls;
-    for (int x = 0; x < sizeFieldX_; ++x) {
-        for (int y = 0; y < sizeFieldY_; ++y) {
-            if (x + 1 < sizeFieldX_)
+    for (int x = 0; x < graphics::sizeFieldX; ++x)
+    {
+        for (int y = 0; y < graphics::sizeFieldY; ++y)
+        {
+            if (x + 1 < graphics::sizeFieldX)
                 walls.emplace_back(twoPoints({x, y, x + 1, y}));
-            if (y + 1 < sizeFieldY_)
+            if (y + 1 < graphics::sizeFieldY)
                 walls.emplace_back(twoPoints({x, y, x, y + 1}));
         }
     }
 
     // each iter we delete a wall && merge 2 rooms
-    dsu dsu_(sizeFieldX_ * sizeFieldY_, sizeFieldX_);
-    for (int iter = 0; iter < sizeFieldX_ * sizeFieldY_ - 1; ++iter) {
+    dsu dsu_(graphics::sizeFieldX * graphics::sizeFieldY, graphics::sizeFieldX);
+    for (int iter = 0; iter < graphics::sizeFieldX * graphics::sizeFieldY - 1; ++iter)
+    {
         std::vector<twoPoints> wallsDiff;
 
         for (auto e : walls) {
@@ -104,8 +112,10 @@ void BasicGame::initRandomMaze() {
 
 void BasicGame::initTanks(int nTanks) {
     std::vector<std::pair<int, int>> freeCells;
-    for (int x = 0; x < sizeFieldX_; ++x) {
-        for (int y = 0; y < sizeFieldY_; ++y) {
+    for (int x = 0; x < graphics::sizeFieldX; ++x)
+    {
+        for (int y = 0; y < graphics::sizeFieldY; ++y)
+        {
             freeCells.emplace_back(std::make_pair(x, y));
         }
     }
@@ -113,14 +123,16 @@ void BasicGame::initTanks(int nTanks) {
     // init tanks
     for (size_t i = 0; i < nTanks; ++i) {
         int index = math::getRand() % freeCells.size();
-        Tank* currentTank = new Tank(world_, b2Vec2(wallLength_ * 0.5 + freeCells[index].first * wallLength_, wallLength_ * 0.5 + freeCells[index].second * wallLength_),
+        auto currentTank = std::make_shared<Tank>(
+            world_, b2Vec2(graphics::wallLength * 0.5 + freeCells[index].first * 
+                            graphics::wallLength, graphics::wallLength * 0.5 + freeCells[index].second * graphics::wallLength),
                                      math::getRand() % 100, nextTankID_++);
 
         setDefaultWeaponToTank(currentTank);
         freeCells.erase(freeCells.begin() + index);
-        currentTank->setColor(std::to_string(i));  // TODO remake after
 
         tanks_.push_back(currentTank);
+        // std::cout << "tank " << i << " = " << currentTank << std::endl;
     }
 }
 
@@ -145,109 +157,114 @@ void BasicGame::bonusStep(float timeStep) {
         nextBonusTimer_ = 3 + math::getRand() % 3;
 
         // generate random bonus
-        b2Vec2 position(wallLength_ * (0.5 + math::getRand() % sizeFieldX_),
-                        wallLength_ * (0.5 + math::getRand() % sizeFieldY_));
+        b2Vec2 position(graphics::wallLength * (0.5 + math::getRand() % graphics::sizeFieldX),
+                        graphics::wallLength * (0.5 + math::getRand() % graphics::sizeFieldY));
 
         float rotation = math::getRand() % 100;
 
         // choose random bonus
         std::string bonusName = bonusesNames_[rand() % bonusesNames_.size()];
 
-        Bonus* bonus = nullptr;
+        std::shared_ptr<Bonus> bonus;
 
-        if (bonusName == "mine") {
-            bonus = new BonusMine(world_, position, rotation, &nextWeaponID_);
-        } else if (bonusName == "buckshot") {
-            bonus = new BonusBuckshot(world_, position, rotation, &nextWeaponID_);
-        } else {
+        if (bonusName == "mine")
+        {
+            bonus = std::make_shared<BonusMine>(world_, position, rotation, &nextWeaponID_);
+        }
+        else if (bonusName == "buckshot")
+        {
+            bonus = std::make_shared<BonusBuckshot>(world_, position, rotation, &nextWeaponID_);
+        }
+        else
+        {
             std::cerr << "bonus " << bonusName << " wasn't found" << std::endl;
         }
 
-        if (bonus != nullptr) {
+        if (bonus)
+        {
             bonuses_.push_back(bonus);
         }
     }
 }
 
-void BasicGame::setDefaultWeaponToTank(Tank* tank) {
-    Weapon* weapon = nullptr;
+void BasicGame::setDefaultWeaponToTank(std::shared_ptr<Tank> tank)
+{
     // weapon = new WeaponBuckshot(tank, nextWeaponID_++);
-    weapon = new WeaponBullet(world_, tank, nextWeaponID_++);
+    auto weapon = std::make_shared<WeaponBullet>(world_, tank, nextWeaponID_++);
     // weapon = new WeaponMine(currentTank, nextWeaponID_++);
     tank->setWeapon(weapon);
-    weapon = nullptr;
 }
 
-void BasicGame::checkDeathTanks() {
-    for (int i = 0; i < tanks_.size(); ++i) {
-        if (tanks_[i]->isDead()) {
-            delete tanks_[i];
-            tanks_.erase(tanks_.begin() + i);
-            --i;
-        }
-    }
-}
+void BasicGame::step(float timeStep)
+{
 
-void BasicGame::checkDeathBullets() {
-    for (int i = 0; i < bullets_.size(); ++i) {
-        if (bullets_[i]->isDead()) {
-            // say tank & weapon that bullet was killed
-            int tankID = bullets_[i]->getTankID();
-            int weaponID = bullets_[i]->getWeaponID();
-            for (int j = 0; j < tanks_.size(); ++j) {
-                if (tanks_[j]->getTankID() == tankID) {
-                    tanks_[j]->bulletDie(weaponID);
-                    break;
-                }
-            }
-
-            delete bullets_[i];
-            bullets_.erase(bullets_.begin() + i);
-            --i;
-        }
-    }
-}
-
-void BasicGame::checkDeathBonuses() {
-    for (int i = 0; i < bonuses_.size(); ++i) {
-        if (bonuses_[i]->isDead()) {
-            delete bonuses_[i];
-            bonuses_.erase(bonuses_.begin() + i);
-            --i;
-        }
-    }
-}
-
-void BasicGame::checkDeath() {
-    // check for death for all objects
-    checkDeathTanks();
-    checkDeathBullets();
-    checkDeathBonuses();
-}
-
-void BasicGame::step(float timeStep) {
     // call step for all objects
-    for (auto& tank : tanks_) {
+    for (auto &tank : tanks_)
+    {
         tank->step(timeStep);
     }
 
-    for (auto& bullet : bullets_) {
+    for (auto &bullet : bullets_)
+    {
         bullet->step(timeStep);
     }
 
-    for (auto& bonus : bonuses_) {
+    for (auto &bonus : bonuses_)
+    {
         bonus->step(timeStep);
     }
 
     // step for bonus factory
     bonusStep(timeStep);
 
-    checkDeath();
+    // check for death for all objects
+    // check for Tank death
+    for (int i = 0; i < tanks_.size(); ++i)
+    {
+        if (tanks_[i]->isDead())
+        {
+            tanks_.erase(tanks_.begin() + i);
+            --i;
+        }
+    }
 
-    // set default weapon to tank if necessary
-    for (auto& tank : tanks_) {
-        if (tank->isWeaponDead()) {
-            setDefaultWeaponToTank(tank);
+    // check for Bullet death
+    for (int i = 0; i < bullets_.size(); ++i)
+    {
+        if (bullets_[i]->isDead())
+        {
+            // say tank & weapon that bullet was killed
+            int tankID = bullets_[i]->getTankID();
+            int weaponID = bullets_[i]->getWeaponID();
+            for (int j = 0; j < tanks_.size(); ++j)
+            {
+                if (tanks_[j]->getTankID() == tankID)
+                {
+                    tanks_[j]->bulletDie(weaponID);
+                    break;
+                }
+            }
+
+            // std::cout << "delete bullet " << bullets_[i] << std::endl;
+            bullets_.erase(bullets_.begin() + i);
+            --i;
+        }
+    }
+
+    for (int i = 0; i < bonuses_.size(); ++i)
+    {
+        if (bonuses_[i]->isDead())
+        {
+            bonuses_.erase(bonuses_.begin() + i);
+            --i;
+        }
+    }
+
+    for (int i = 0; i < tanks_.size(); ++i)
+    {
+        if (tanks_[i]->isWeaponDead())
+        {
+            setDefaultWeaponToTank(tanks_[i]);
         }
     }
 
@@ -255,61 +272,67 @@ void BasicGame::step(float timeStep) {
     world_.Step(timeStep, 8, 3);
 }
 
-void BasicGame::tank_move(int tankID, float direction) {
-    Tank* tank = findTank(tankID);
-    if (tank != nullptr)
+void BasicGame::tank_move(int tankID, float direction)
+{
+    auto tank = findTank(tankID);
+    if (tank)
         tank->move(direction);
 }
 
-void BasicGame::tank_rotate(int tankID, float direction) {
-    Tank* tank = findTank(tankID);
-    if (tank != nullptr)
+void BasicGame::tank_rotate(int tankID, float direction)
+{
+    auto tank = findTank(tankID);
+    if (tank)
         tank->rotate(direction);
 }
 
-void BasicGame::tank_fire(int tankID) {
-    Tank* tank = findTank(tankID);
-    if (tank != nullptr) {
-        for (auto e : tanks_[tankID]->fire(world_, nextBulletID_)) {
-            bullets_.push_back(e);
+void BasicGame::tank_fire(int tankID)
+{
+    auto tank = findTank(tankID);
+    if (tank)
+    {
+        for (auto& e : tank->fire(world_, nextBulletID_))
+        {
+            bullets_.push_back(std::move(e));
         }
     }
 }
 
-void BasicGame::debug_draw(sf::RenderWindow& window) {
-    window.clear(sf::Color(255, 255, 255, 255));
-
+void BasicGame::draw()
+{
+    graphics_->clear();
     // main draw
-    for (auto& tank : tanks_) {
-        tank->debug_draw(window);
+    for (size_t i = 0; i < tanks_.size(); ++i)
+    {
+        graphics_->draw(tanks_[i]);
+    }
+    for (size_t i = 0; i < walls_.size(); ++i)
+    {
+        graphics_->draw(std::shared_ptr<Wall>(std::shared_ptr<Wall>(), &walls_[i]));
+    }
+    for (size_t i = 0; i < bullets_.size(); ++i)
+    {
+        graphics_->draw(bullets_[i]);
     }
 
-    for (auto& wall : walls_) {
-        wall.debug_draw(window);
+    for (size_t i = 0; i < bonuses_.size(); ++i)
+    {
+        graphics_->draw(bonuses_[i]);
     }
 
-    for (auto& bullet : bullets_) {
-        bullet->debug_draw(window);
-    }
-
-    for (auto& bonus : bonuses_) {
-        bonus->debug_draw(window);
-    }
-
-    // this function is in main.cpp now
-    // window.display();
+    // graphics_->display();
 }
 
 void BasicGame::addWall(float x1, float y1, float x2, float y2) {
     if (y1 == y2) {
         // horizontal wall
-        y1 -= wallWidth_ * 0.5;
-        y2 += wallWidth_ * 0.5;
+        y1 -= graphics::wallWidth * 0.5;
+        y2 += graphics::wallWidth * 0.5;
         walls_.push_back(Wall(world_, b2Vec2(x1, y1), b2Vec2(x2, y2)));
     } else {
         // vertical wall
-        x1 -= wallWidth_ * 0.5;
-        x2 += wallWidth_ * 0.5;
+        x1 -= graphics::wallWidth * 0.5;
+        x2 += graphics::wallWidth * 0.5;
         walls_.push_back(Wall(world_, b2Vec2(x1, y1), b2Vec2(x2, y2)));
     }
 }
@@ -317,28 +340,39 @@ void BasicGame::addWall(float x1, float y1, float x2, float y2) {
 void BasicGame::addWallBetweenCells(int x1, int y1, int x2, int y2) {
     if (y1 == y2) {
         // vertical wall
-        addWall(x2 * wallLength_, y1 * wallLength_, x2 * wallLength_, (y1 + 1) * wallLength_);
-    } else {
+        addWall(x2 * graphics::wallLength, y1 * graphics::wallLength, x2 * graphics::wallLength, (y1 + 1) * graphics::wallLength);
+    }
+    else
+    {
         // horizontal wall
-        addWall(x1 * wallLength_, y2 * wallLength_, (x1 + 1) * wallLength_, y2 * wallLength_);
+        addWall(x1 * graphics::wallLength, y2 * graphics::wallLength, (x1 + 1) * graphics::wallLength, y2 * graphics::wallLength);
     }
 }
 
-int BasicGame::getResult() {
-    if (tanks_.size() >= 2) {
-        return 0;  // game is still going
-    } else if (tanks_.size() == 0) {
-        return -1;  // toe
-    } else if (tanks_.size() == 1) {
-        return tanks_[0]->getTankID() + 1;  // tank number x wins
+int BasicGame::getResult()
+{
+    if (tanks_.size() >= 2)
+    {
+        return 0; // game is still going
+    }
+    else if (tanks_.size() == 0)
+    {
+        return -1; // toe
+    }
+    else
+    {
+        return tanks_[0]->getTankID() + 1; // tank number x wins
     }
 }
 
-Tank* BasicGame::findTank(int tankID) {
-    for (auto& tank : tanks_) {
-        if (tank->getTankID() == tankID) {
-            return tank;
+std::shared_ptr<Tank> BasicGame::findTank(int tankID)
+{
+    for (int i = 0; i < tanks_.size(); ++i)
+    {
+        if (tanks_[i]->getTankID() == tankID)
+        {
+            return tanks_[i];
         }
     }
-    return nullptr;
+    return std::shared_ptr<Tank>();
 }
