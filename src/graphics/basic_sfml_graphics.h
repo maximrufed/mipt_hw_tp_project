@@ -15,7 +15,7 @@ private:
     sf::Texture bonus_[2];
 
 public:
-    Data();
+    Data(const std::string&);
 
     sf::Sprite tank[4];
     sf::Sprite weapon[4][3];
@@ -37,7 +37,7 @@ private:
     bool mouseInCircle(const sf::Vector2f& position, float radius);
     
 public:
-    BasicSfmlGraphics(std::shared_ptr<sf::RenderWindow>);
+    BasicSfmlGraphics(std::shared_ptr<sf::RenderWindow>, const std::string&);
 
     bool isOpen() const override;
 

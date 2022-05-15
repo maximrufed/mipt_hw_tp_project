@@ -132,7 +132,6 @@ void BasicGame::initTanks(int nTanks) {
         freeCells.erase(freeCells.begin() + index);
 
         tanks_.push_back(currentTank);
-        // std::cout << "tank " << i << " = " << currentTank << std::endl;
     }
 }
 
@@ -245,7 +244,6 @@ void BasicGame::step(float timeStep)
                 }
             }
 
-            // std::cout << "delete bullet " << bullets_[i] << std::endl;
             bullets_.erase(bullets_.begin() + i);
             --i;
         }

@@ -30,6 +30,8 @@ class Graphics;
 
 class Graphics;
 
+class Graphics;
+
 class BasicGame
 {
 private:

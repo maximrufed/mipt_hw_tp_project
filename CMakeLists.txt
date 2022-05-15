@@ -25,7 +25,7 @@ set(sources
     src/graphics/sfml_event_manager.cpp
 )
 
-add_executable(main main.cpp ${sources})
+add_executable(game main.cpp ${sources})
 
 include_directories(src)
 include_directories(src/weapon)
@@ -33,12 +33,16 @@ include_directories(src/bullet)
 include_directories(src/bonus)
 include_directories(src/graphics)
 
-# target_include_directories(main PRIVATE src)
-
 # link SFML
-target_link_libraries(main sfml-graphics sfml-window sfml-system)
+target_link_libraries(game sfml-graphics sfml-window sfml-system)
 
 # link box2d
 add_subdirectory(libs)
 
-target_link_libraries(main box2d)
+target_link_libraries(game box2d)
+
+set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
+
+install(TARGETS game DESTINATION bin)
+install(DIRECTORY images DESTINATION .)
+install(DIRECTORY data DESTINATION .)

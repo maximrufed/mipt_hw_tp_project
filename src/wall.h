@@ -22,5 +22,9 @@ private:
 
     float getSizeY() const;
 
+    float getSizeX() const;
+
+    float getSizeY() const;
+
     b2Vec2 getPosition() const;
 };
