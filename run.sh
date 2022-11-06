@@ -1,7 +1,5 @@
-# rm -rf build
-rm build/game
-mkdir build
-cd build
+rm -f build/game
+mkdir -p build; cd build
 cmake ..
 make
 ./game

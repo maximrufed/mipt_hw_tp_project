@@ -1,5 +1,5 @@
 #include "event_manager.h"
-#include <SFML/graphics.hpp>
+#include <SFML/Graphics.hpp>
 
 class SfmlEventManager: public EventManager {
 private:
