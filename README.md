@@ -9,6 +9,12 @@ To run the game, execute `run.sh` script.
 
 To install the game, execute `install.sh` script with one argument: destination folder.
 
+Game controls:
+- First player: Arrows and `Space` for shooting.
+- Second player: `WASD` and `Q` for shooting.
+- Third player: `TFGH` and `R` for shooting.
+- Fourth player: `IJKL` and `U` for shooting.
+
 ## Запуск проекта
 
 Проект использует две нестандартные библиотеки: Box2d, SFML  
