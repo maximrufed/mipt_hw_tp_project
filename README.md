@@ -1,10 +1,16 @@
 ## English
 
 Prerequisites:
-- The game uses graphics library SFML, to install the library on Linux run:
-  ```
-  sudo apt-get install libsfml-dev
-  ```
+- The game uses graphics library SFML, to install the library run
+  + On Linux:
+    ```
+    sudo apt-get install libsfml-dev
+    ```
+  + On Mac:
+    ```
+    brew install sfml
+    ```
+
 To run the game, execute `run.sh` script.
 
 To install the game, execute `install.sh` script with one argument: destination folder.
