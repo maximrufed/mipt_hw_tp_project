@@ -1,3 +1,14 @@
+## English
+
+Prerequisites:
+- The game uses graphics library SFML, to install the library on Linux run:
+  ```
+  sudo apt-get install libsfml-dev
+  ```
+To run the game, execute `run.sh` script.
+
+To install the game, execute `install.sh` script with one argument: destination folder.
+
 ## Запуск проекта
 
 Проект использует две нестандартные библиотеки: Box2d, SFML  
